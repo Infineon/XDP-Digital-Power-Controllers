@@ -1,0 +1,8 @@
+===============================================================================
+2019-11-18 09:39:46 , Version: 12
+Firmware Details:
+       Version UTC Tag:    0x5DD2AD32
+       Firmware Project:   "rom_image"
+===============================================================================
+[SHASTA-719] - FW_CONFIG_TELEMETRY was not able to update fault threshold according to the gain/ offset adjustment
+[SHASTA-723] - When configuration with TON_MAX_FAULT response is set to Disable and Retry, retry continuos to OTP. The system does not respond as expected when TON_MAX fault is created.

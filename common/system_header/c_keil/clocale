@@ -1,0 +1,29 @@
+/*
+ * C++ header for C header locale.h
+ * Copyright 1997 ARM Limited. All rights reserved.
+ */
+
+/*
+ * RCS $Revision: 178085 $
+ * Checkin $Date: 2012-12-11 14:54:17 +0000 (Tue, 11 Dec 2012) $
+ * Revising $Author: pwright $
+ */
+
+
+#ifndef __clocale
+#define __clocale
+#define __ARMCLIB_VERSION 5030076
+
+  #define __LOCALE_NO_EXPORTS 1
+  #include <locale.h>
+  #undef __LOCALE_NO_EXPORTS
+
+  #undef __locale_h  // later inclusion of locale.h must do using std::*
+  #ifdef __EDG_IMPLICIT_USING_STD
+   /* Implicitly include a using directive for the STD namespace when this
+       preprocessing flag is TRUE. */
+       using namespace ::std;
+  #endif /* ifdef __EDG_IMPLICIT_USING_STD */
+
+#endif /* __clocale */ 
+

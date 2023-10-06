@@ -1,0 +1,184 @@
+diff --git a/projects/patch_empty_app/Makefile b/projects/patch_empty_app/Makefile
+index efc925a95..5fab602ad 100644
+--- a/projects/patch_empty_app/Makefile
++++ b/projects/patch_empty_app/Makefile
+@@ -81,14 +81,20 @@ CCODEANALYZER_DIRS_FILTER := \
+ # Specifiy the directories which are included in C Code analysis.
+ CCODEANALYZER_DIRS := $(filter-out $(CCODEANALYZER_DIRS_FILTER), $(CCOMPILER_DIRS))
+ 
++# Reference Image for the patch targets. Not relevant for the image target.
++#PATCH_REF_IMAGE_NAMES := $(REPO_ROOT_DIR)/versions/Shasta.A11.ROM.v4_20180124_124011_rom_image
++#PATCH_REF_IMAGE_NAMES := $(REPO_ROOT_DIR)/projects/rom_image/build/image/image
++#PATCH_REF_IMAGE_NAMES := $(REPO_ROOT_DIR)/projects/rom_image/build/simvision/simvision
++#PATCH_REF_IMAGE_NAMES := $(REPO_ROOT_DIR)/versions/Shasta.A21.ROM.v9_20190309_173226_rom_image
+ PATCH_REF_IMAGE_NAMES := $(REPO_ROOT_DIR)/versions/Shasta.A23.ROM.v12_20191118_093946_rom_image
+ 
+ # Reference Image for the patch targets. Not relevant for the image target.
+ PATCH_LINK_RANGE_CONFIG_FILE := ./src/partial_patch.cfg
+ 
+ # In case an entry point is needed by e.g. a debugger
+-LINKER_PARAMS += --entry=patch2_entry
++LINKER_PARAMS += --entry=patch_entry
+ 
++# Plugin for the targets "simvision"
+ include $(REPO_ROOT_DIR)/common/MakefilePatching.mk
+ 
+ ifeq ($(TOOLCHAIN), ARM_GCC)
+@@ -100,10 +106,6 @@ ifeq ($(BUILD), DEFAULT)
+ 	include $(REPO_ROOT_DIR)/common/MakefilePatchDefault.mk
+ endif
+ 
+-ifeq ($(BUILD), YES)
+-	# Plugin for pmbus default table c code
+-	include $(REPO_ROOT_DIR)/common/MakefilePmbusDefaultArrary.mk
+-endif
+ 
+ # Plugin for pmbus auto generation of c code
+ include $(REPO_ROOT_DIR)/common/MakefilePmbus.mk
+diff --git a/projects/patch_empty_app/src/partial_patch.cfg b/projects/patch_empty_app/src/partial_patch.cfg
+index aaa3990cc..cd5051221 100644
+--- a/projects/patch_empty_app/src/partial_patch.cfg
++++ b/projects/patch_empty_app/src/partial_patch.cfg
+@@ -5,5 +5,5 @@ minramsize = 0x400
+ 
+ [Version]
+ baseversion = 0x5DD2AD32
+-newversion = 0x5971BBBB
++newversion = 0x651FDB2E
+ 
+diff --git a/projects/patch_errata/Makefile b/projects/patch_errata/Makefile
+index 62d987163..d788d6ff8 100644
+--- a/projects/patch_errata/Makefile
++++ b/projects/patch_errata/Makefile
+@@ -106,16 +106,11 @@ PATCH_LINK_RANGE_CONFIG_FILE := ./src/partial_patch.cfg
+ # In case an entry point is needed by e.g. a debugger
+ LINKER_PARAMS += --entry=patch_entry
+ 
+-# Plugin for the targets "simvision"
+-include $(REPO_ROOT_DIR)/common/MakefileSimVision.mk
+ include $(REPO_ROOT_DIR)/common/MakefilePatching.mk
+ 
+ ifeq ($(TOOLCHAIN), ARM_GCC)
+ # Plugin for the targets "patch".
+ 	include $(REPO_ROOT_DIR)/common/MakefileCommonGCC.mk
+-else
+-# Plugin for the targets "patch".
+-	include $(REPO_ROOT_DIR)/common/MakefileCommonARM.mk
+ endif
+ # Plugin for pmbus auto generation of c code
+ include $(REPO_ROOT_DIR)/common/MakefilePmbus.mk
+diff --git a/projects/patch_user_app/.cproject b/projects/patch_user_app/.cproject
+index f23430fac..0a58aa0e3 100644
+--- a/projects/patch_user_app/.cproject
++++ b/projects/patch_user_app/.cproject
+@@ -111,22 +111,16 @@
+ 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
+ 		<buildTargets>
+ 			<target name="clean" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+-				<buildCommand>make</buildCommand>
+-				<buildTarget>clean</buildTarget>
+-				<stopOnError>true</stopOnError>
+-				<useDefaultCommand>true</useDefaultCommand>
+-				<runAllBuilders>true</runAllBuilders>
+-			</target>
+-			<target name="patch TOOLCHAIN=ARM" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+ 				<buildCommand>make</buildCommand>
+ 				<buildArguments/>
+-				<buildTarget>patch TOOLCHAIN=ARM</buildTarget>
++				<buildTarget>clean</buildTarget>
+ 				<stopOnError>true</stopOnError>
+ 				<useDefaultCommand>true</useDefaultCommand>
+ 				<runAllBuilders>true</runAllBuilders>
+ 			</target>
+ 			<target name="pmbus" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+ 				<buildCommand>make</buildCommand>
++				<buildArguments/>
+ 				<buildTarget>pmbus</buildTarget>
+ 				<stopOnError>true</stopOnError>
+ 				<useDefaultCommand>true</useDefaultCommand>
+@@ -134,7 +128,6 @@
+ 			</target>
+ 			<target name="patch TOOLCHAIN=ARM_GCC" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+ 				<buildCommand>make</buildCommand>
+-				<buildArguments/>
+ 				<buildTarget>patch TOOLCHAIN=ARM_GCC</buildTarget>
+ 				<stopOnError>true</stopOnError>
+ 				<useDefaultCommand>true</useDefaultCommand>
+diff --git a/projects/patch_user_app/Makefile b/projects/patch_user_app/Makefile
+index efc925a95..d788d6ff8 100644
+--- a/projects/patch_user_app/Makefile
++++ b/projects/patch_user_app/Makefile
+@@ -9,8 +9,8 @@
+ # is used as reference when generating the absolute path information 
+ REPO_ROOT_DIR := ../..
+ 
+-# Overwrite help as the first target so that this one is called when no argument is given to GNUmake. simvision
+-default: patch
++# Overwrite help as the first target so that this one is called when no argument is given to GNUmake.
++default: simvision
+ 
+ # Toolchain defines the tools used for compiling. 
+ # Toolchain can be ARM_GCC, the GNU Compiler or ARMV5, the Keil-ARM compiler
+@@ -57,9 +57,22 @@ endif
+ # Note: If CCOMPILER_DIRS_FILTER is empty it will be set to SOURCE_DIRS
+ CCOMPILER_DIRS_FILTER := \
+     ../version/ \
++    $(filter %/, $(wildcard $(REPO_ROOT_DIR)/common/modules/*/)) \
++    $(REPO_ROOT_DIR)/common/utilities/ \
+ 	$(REPO_ROOT_DIR)/common/system_header/gnu/sys/ \
+ 	$(REPO_ROOT_DIR)/common/system_header/c_keil/ \
+-	$(filter %/, $(wildcard $(REPO_ROOT_DIR)/common/modules/*/))
++	$(REPO_ROOT_DIR)/common/modules/configurator/ \
++    $(REPO_ROOT_DIR)/common/modules/driver_common/ \
++    $(REPO_ROOT_DIR)/common/modules/job_agency/ \
++    $(REPO_ROOT_DIR)/common/modules/logger/ \
++    $(REPO_ROOT_DIR)/common/modules/oam/ \
++    $(REPO_ROOT_DIR)/common/modules/otp/ \
++    $(REPO_ROOT_DIR)/common/modules/patcher/ \
++    $(REPO_ROOT_DIR)/common/modules/pmbus/ \
++    $(REPO_ROOT_DIR)/common/modules/regulation/ \
++    $(REPO_ROOT_DIR)/common/modules/rtx/ \
++    $(REPO_ROOT_DIR)/common/modules/startup/ \
++    $(REPO_ROOT_DIR)/common/modules/user_app/
+ 
+ CCOMPILER_DIRS := $(filter-out $(CCOMPILER_DIRS_FILTER), $(SOURCE_DIRS))
+ 
+@@ -81,13 +94,17 @@ CCODEANALYZER_DIRS_FILTER := \
+ # Specifiy the directories which are included in C Code analysis.
+ CCODEANALYZER_DIRS := $(filter-out $(CCODEANALYZER_DIRS_FILTER), $(CCOMPILER_DIRS))
+ 
++# Reference Image for the patch targets. Not relevant for the image target.
++#PATCH_REF_IMAGE_NAMES := $(REPO_ROOT_DIR)/versions/Shasta.A11.ROM.v4_20180124_124011_rom_image
++#PATCH_REF_IMAGE_NAMES := $(REPO_ROOT_DIR)/projects/rom_image/build/image/image
++#PATCH_REF_IMAGE_NAMES := $(REPO_ROOT_DIR)/projects/rom_image/build/simvision/simvision
+ PATCH_REF_IMAGE_NAMES := $(REPO_ROOT_DIR)/versions/Shasta.A23.ROM.v12_20191118_093946_rom_image
+ 
+ # Reference Image for the patch targets. Not relevant for the image target.
+ PATCH_LINK_RANGE_CONFIG_FILE := ./src/partial_patch.cfg
+ 
+ # In case an entry point is needed by e.g. a debugger
+-LINKER_PARAMS += --entry=patch2_entry
++LINKER_PARAMS += --entry=patch_entry
+ 
+ include $(REPO_ROOT_DIR)/common/MakefilePatching.mk
+ 
+@@ -95,19 +112,5 @@ ifeq ($(TOOLCHAIN), ARM_GCC)
+ # Plugin for the targets "patch".
+ 	include $(REPO_ROOT_DIR)/common/MakefileCommonGCC.mk
+ endif
+-
+-ifeq ($(BUILD), DEFAULT)
+-	include $(REPO_ROOT_DIR)/common/MakefilePatchDefault.mk
+-endif
+-
+-ifeq ($(BUILD), YES)
+-	# Plugin for pmbus default table c code
+-	include $(REPO_ROOT_DIR)/common/MakefilePmbusDefaultArrary.mk
+-endif
+-
+ # Plugin for pmbus auto generation of c code
+ include $(REPO_ROOT_DIR)/common/MakefilePmbus.mk
+-
+-
+-
+-

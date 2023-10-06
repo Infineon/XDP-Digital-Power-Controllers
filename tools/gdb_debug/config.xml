@@ -1,0 +1,120 @@
+<debug>
+  <variables>
+      <scope name="ibs_tb">
+          <scope name="ibs_wr">
+              <scope name="ibs">
+                  <scope name="cpus">
+                      <scope name="ram1_shell">
+                          <scope name="mbist_ram">
+                              <scope name="mbist_lpspram_po_8kx32_con">
+                                  <scope name="mbist_lpspram_po_8kx32_lpspram_po_8kx32_block_instance_0">
+                                      <variable name="A [12:0]" varname="ram1_address"/>
+                                      <variable name="DI [31:0]" varname="ram1_content_write"/>
+                                      <variable name="DO [31:0]" varname="ram1_content_read"/>
+                                      <variable name="WIB [31:0]" varname="ram1_mask"/>
+                                      <variable name="CSB" varname="ram1_csb"/>
+                                      <variable name="RWB" varname="ram1_rwb"/>
+                                      <variable name="CLK" varname="ram1_clock"/>
+                                  </scope>
+                              </scope>
+                          </scope>
+                      </scope>
+                      <scope name="ram2_shell">
+                          <scope name="mbist_ram">
+                              <scope name="mbist_lpspram_po_8kx32_con">
+                                  <scope name="mbist_lpspram_po_8kx32_lpspram_po_8kx32_block_instance_0">
+                                      <variable name="A [12:0]" varname="ram2_address"/>
+                                      <variable name="DI [31:0]" varname="ram2_content_write"/>
+                                      <variable name="DO [31:0]" varname="ram2_content_read"/>
+                                      <variable name="WIB [31:0]" varname="ram2_mask"/>
+                                      <variable name="CSB" varname="ram2_csb"/>
+                                      <variable name="RWB" varname="ram2_rwb"/>
+                                      <variable name="CLK" varname="ram2_clock"/>
+                                  </scope>
+                              </scope>
+                          </scope>
+                      </scope>
+                      <scope name="cortexm0_top">
+                          <scope name="u_cortexm0">
+                              <scope name="u_top">
+                                  <scope name="u_dbg">
+                                      <scope name="u_dwt">
+                                          <variable name="cpu_pc [31:0]" varname="cpu_pc"/>
+                                      </scope>
+                                  </scope>
+                                  <scope name="u_sys">
+                                      <scope name="u_core">
+                                          <scope name="u_gpr">
+                                              <variable name="reg_r00 [31:0]" varname="cpu_r0"/>
+                                              <variable name="reg_r01 [31:0]" varname="cpu_r1"/>
+                                              <variable name="reg_r02 [31:0]" varname="cpu_r2"/>
+                                              <variable name="reg_r03 [31:0]" varname="cpu_r3"/>
+                                              <variable name="reg_r04 [31:0]" varname="cpu_r4"/>
+                                              <variable name="reg_r05 [31:0]" varname="cpu_r5"/>
+                                              <variable name="reg_r06 [31:0]" varname="cpu_r6"/>
+                                              <variable name="reg_r07 [31:0]" varname="cpu_r7"/>
+                                              <variable name="reg_r08 [31:0]" varname="cpu_r8"/>
+                                              <variable name="reg_r09 [31:0]" varname="cpu_r9"/>
+                                              <variable name="reg_r10 [31:0]" varname="cpu_r10"/>
+                                              <variable name="reg_r11 [31:0]" varname="cpu_r11"/>
+                                              <variable name="reg_r12 [31:0]" varname="cpu_r12"/>
+                                              <variable name="val_psp [31:0]" varname="cpu_psp"/>
+                                              <variable name="val_msp [31:0]" varname="cpu_msp"/>
+                                              <variable name="reg_r14 [31:0]" varname="cpu_r14"/>
+                                              <variable name="psp_sel" varname="psp_sel"/>
+                                              <variable name="xpsr_val [31:0]" varname="cpu_cpsr"/>
+                                          </scope>
+                                          <scope name="u_psr">
+                                          </scope>
+                                      </scope>
+                                  </scope>
+                              </scope>
+                          </scope>
+                      </scope>
+                  </scope>
+              </scope>
+          </scope>
+      </scope>
+  </variables>
+  <mapping>
+      <register number="0" content="cpu_r0"/>
+      <register number="1" content="cpu_r1"/>
+      <register number="2" content="cpu_r2"/>
+      <register number="3" content="cpu_r3"/>
+      <register number="4" content="cpu_r4"/>
+      <register number="5" content="cpu_r5"/>
+      <register number="6" content="cpu_r6"/>
+      <register number="7" content="cpu_r7"/>
+      <register number="8" content="cpu_r8"/>
+      <register number="9" content="cpu_r9"/>
+      <register number="10" content="cpu_r10"/>
+      <register number="11" content="cpu_r11"/>
+      <register number="12" content="cpu_r12"/>
+      <condition variable="psp_sel" value="0" event="0" mask="1">
+          <register number="13" content="cpu_msp"/>
+      </condition>
+      <condition variable="psp_sel" value="1" event="0" mask="1">
+          <register number="13" content="cpu_psp"/>
+      </condition>
+      <register number="14" content="cpu_r14"/>
+      <register number="15" content="cpu_pc" pc="true"/>
+      <condition variable="ram1_csb" value="0" event="0" mask="1">
+          <condition variable="ram1_rwb" value="0" event="0" mask="1">
+              <condition variable="ram1_clock" value="1" event="1" mask="1">
+                  <memory type="variable" address="ram1_address" content="ram1_content_write" mask="ram1_mask" offset="0x20000000" increment="4"/>
+              </condition>
+          </condition>
+      </condition>
+      <condition variable="ram2_csb" value="0" event="0" mask="1">
+          <condition variable="ram2_rwb" value="0" event="0" mask="1">
+              <condition variable="ram2_clock" value="1" event="1" mask="1">
+                  <memory type="variable" address="ram2_address" content="ram2_content_write" mask="ram2_mask" offset="0x20008000" increment="4"/>
+              </condition>
+          </condition>
+      </condition>
+      <register number="25" content="cpu_cpsr"/>
+  </mapping>
+  <init>
+      <elf filename="..\..\projects\rom_image\build\simvision\simvision.elf"/>
+  </init>
+</debug>

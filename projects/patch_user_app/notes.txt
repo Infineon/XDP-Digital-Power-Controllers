@@ -1,0 +1,13 @@
+JIRA_752_Disable_I2C_EN
+Patch to store the disable I2C setting in OTP, as PMBus command 0xFD and 0xFE is not store to OTP.
+This is to ensure at every power cycle the I2C will be disable unless change by the command.
+Patch features: PMBus MFR Command 0xB3(MFR_DISABLE_I2C) is use to enable or disable i2c communication)
+Operation Step for this patch features:
+1)	Store patch to OTP (which include this feature).
+2)	Load Config and PMBus to RAM
+a.	Initialize setting for PMBus MFR command 0xB3 is set to 0x00(enable i2c), to enable write to OTP function.
+3)	Store config and PMBus to OTP.
+4)	Write 0x01 to MFR command 0xB3 “MFR_DISABLE_I2C”.
+5)	Write 0xB3(179) to PMBus command 0x17 “STORE_USER_CODE” to store setting to OTP(PMBus Partial Config sector).
+6)	Reset/Power cycle Shasta and I2C is disable upon power up. 
+7)	To enable I2C set 0x00 to MFR Command 0xB3.

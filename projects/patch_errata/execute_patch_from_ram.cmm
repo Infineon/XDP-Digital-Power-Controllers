@@ -1,0 +1,63 @@
+; Script for loading and executing a patch in ram, note we are limited by ram size in what we can execute.
+
+; Stop the system
+BREAK
+
+print "attempting to load and run patch in ram"
+
+; Partitions have a size of 0x4000 by default, but user must modify this if they planned OTP partitioning differently
+; Therefore make sure that the partition size is not exceeded
+&otp_partition=1
+&otp_partition_size=0x4000
+&otp_addr=0x10020000+(&otp_partition*&otp_partition_size)
+
+&ram_addr=var.value(DRIVER_COMMON_STRUCT.scratchpad)
+&end_addr=0x20063FFF
+Data.Set &ram_addr--&end_addr %Byte 0x0 
+; load the patch image via bin file ...
+; put the correct loading address here
+
+;&ram_addr=var.value(DRIVER_COMMON_STRUCT.scratchpad+1024)
+PRINT &ram_addr
+
+data.dump &ram_addr
+DATA.LOAD.BINARY ".\build\patch\patch.bin" &ram_addr--&end_addr /nosymbol
+
+; Read the size of the patch with is at position 4 of the header
+&size_addr=D:(&ram_addr+4)
+PRINT &size_addr
+
+&size=DATA.SHORT(&size_addr)
+PRINT &size
+
+V os_running=0
+
+DATA.LOAD.ELF ".\build\patch\patch.elf" /NoCODE /NoRegister /NoClear /spath
+
+;The patch_ram_excecute allows to execute a function from ram. The function is
+;compiled and re-mapped to the the otp partition. Thus it can be later stored directly to OTP
+;@param partition Pointer to corresponding OTP partition.
+;@param cmd_hdr_ptr Pointer to the ram location where the patch is located
+
+Var.call patch_ram_execute(&otp_partition, &ram_addr)
+;B.S user_drv_init
+go.return
+
+;Restore the CPU context from before our function call
+Frame.Swap
+
+Var.call pmbus_mfr_autogen_init()
+go.return
+
+;Restore the CPU context from before our function call
+Frame.Swap
+
+; Reset and restart the system if required
+;SYSTEM.RESETTARGET
+data.dump &otp_addr
+data.dump &ram_addr
+;DATA.DUMP 0x10024000--0x10026000
+
+;PRINT "Start from Reset"
+GO
+

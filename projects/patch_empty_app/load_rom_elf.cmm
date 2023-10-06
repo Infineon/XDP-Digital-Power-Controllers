@@ -1,0 +1,2 @@
+DATA.LOAD.ELF ".\..\..\versions\Shasta.A23.ROM.v12_20191118_093946_rom_image.elf" /NoCODE /NoRegister /NoClear /spath
+

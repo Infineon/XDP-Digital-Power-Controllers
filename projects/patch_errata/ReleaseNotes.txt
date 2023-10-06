@@ -1,0 +1,38 @@
+===============================================================================
+2023-05-17 12:01:46 Firmware Details:
+       Version UTC Tag:    0x646451AA
+       Firmware Project:   "patch_errata"
+User:
+       WIN Login:          "INFINEON\seetweireniv"
+===============================================================================
+- Final build for quanta
+-errata JIRA implement as below:
+JIRA_774_FREQUENCY_SWITCH_ZERO
+JIRA_769_SETUP_PASSWORD
+JIRA_783_PATCH_IN_SAME_PARTITION_OF_INVALIDATED_PATCH
+JIRA_785_REMAP_CLEAR_NEEDED_ON_RESET
+JIRA_916_STORE_PARTIAL_CONFIG_MFR_IOUT_OC_FAST_FAULT_LIMIT
+===============================================================================
+2023-05-16 15:49:48 Firmware Details:
+       Version UTC Tag:    0x6463359C
+       Firmware Project:   "patch_errata"
+User:
+       WIN Login:          "INFINEON\seetweireniv"
+===============================================================================
+- test build
+===============================================================================
+2023-05-16 14:55:13 Firmware Details:
+       Version UTC Tag:    0x646328D1
+       Firmware Project:   "patch_errata"
+User:
+       WIN Login:          "INFINEON\seetweireniv"
+===============================================================================
+- test build 
+===============================================================================
+2023-05-16 14:43:39 Firmware Details:
+       Version UTC Tag:    0x6463261B
+       Firmware Project:   "patch_errata"
+User:
+       WIN Login:          "INFINEON\seetweireniv"
+===============================================================================
+- new build for ARM compiler

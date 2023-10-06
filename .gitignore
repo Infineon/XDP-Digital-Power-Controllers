@@ -1,0 +1,18 @@
+# In the OPUS build environnment, every file below a 'build' directory is a build artefact and
+# can be recreated by rerunning the respective build target.
+# Therefore, exclude all content of such directories and its subdirs from being looked at by git
+build/
+hwswDebugLog/Eclipse.log
+# in case the eclipse workspace is WITHIN the clone, git should ignore it ...
+.metadata
+RemoteSystemsTempFiles
+# .settings is an Eclipse-owned directory and is local to every user => tell git to ignore it.
+.settings
+
+# Temporary files generated be the Python lib2to3 library
+*.pickle
+
+.vscode
+
+# Ignore venv related files
+/tools/python/.venv/*
