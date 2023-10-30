@@ -17,7 +17,7 @@ if not defined PYTHON_INSTALL_DIR (echo Pls set env variable PYTHON_INSTALL_DIR 
 @if not exist "%HOME%" @set HOME=%HOMEDRIVE%%HOMEPATH%
 
 
-if exist %PYTHON_INSTALL_DIR%\lib\site-packages\openpyxl-2.5.0a2-py2.7.egg (
+if exist %PYTHON_INSTALL_DIR%\lib\site-packages\openpyxl-2.5.1-py2.7.egg-info (
     rem file exists
 	echo python appears to have required modules, skipping install
 ) else (

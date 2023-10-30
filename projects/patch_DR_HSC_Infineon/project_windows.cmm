@@ -1,0 +1,65 @@
+// T32_uTrace Tue Feb 17 14:17:55 2015
+
+ B::
+ 
+ TOOLBAR ON
+ STATUSBAR ON
+ FramePOS 264.5,1.5714,,,Maximized
+ WinPAGE.RESet
+ 
+ WinPAGE.Create P000
+ 
+ WinCLEAR
+ WinPOS 5.625 3.2143 121. 53. 16. 1. W006 ICONIC
+ WinTABS 10. 10. 25. 62.
+ list rt_systick
+ 
+ WinPOS 55.75 0.42857 81. 11. 16. 1. W008 ICONIC
+ Data.dump (0x50000000) /DIALOG
+ 
+ WinPOS 0.5 51.0 143. 7. 0. 0. W000
+ AREA
+ 
+ WinPOS 56.0 0.28571 80. 12. 5. 0. W001
+ Frame /Locals /Caller
+ 
+ WinPOS 59.75 0.42857 80. 7. 0. 1. W004
+ WinTABS 10. 5. 14. 5. 10. 7. 10. 10.
+ TASK.Task
+ 
+ WinPOS 1.25 0.78571 48. 13. 0. 0. W005
+ Register /SpotLight
+ 
+ WinPOS 144.25 0.57143 80. 6. 0. 0. W003
+ Var.Local
+ 
+ WinPOS 54.0 56.0 81. 9. 16. 1. W012
+ Data.dump (0x200000e0) /DIALOG
+ 
+ WinPOS 145.88 40.929 81. 27. 0. 0. W007
+ Per ~~~~\..\..\tools\T32\per\per_infineon_shasta.per /SpotLight /DualPort
+ WinPAN 0. 213.
+ 
+ WinPOS 1.375 13.357 89. 29. 16. 1. W002
+ WinTABS 10. 10. 25. 62.
+ list
+ 
+ WinPOS 116.88 4.6429 118. 55. 0. 0. W010
+ Var.Watch %spotlight %HEX 
+ 
+ 
+ VAR.ADDWATCH oam
+ VAR.ADDWATCH Log_App
+ VAR.ADDWATCH os_running
+ VAR.ADDWATCH os_tsk
+ VAR.ADDWATCH os_initialized
+ VAR.ADDWATCH sys_boot_descriptor
+ VAR.ADDWATCH sys_boot_state
+ VAR.ADDWATCH sys_num_critical_reboots
+ VAR.ADDWATCH sys_hardfault_stack_frame
+ VAR.ADDWATCH os_time
+ VAR.ADDWATCH version_timestamp
+ 
+ WinPAGE.select P000
+ 
+ ENDDO

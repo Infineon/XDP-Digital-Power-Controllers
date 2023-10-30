@@ -1,0 +1,52 @@
+; Script for storing a patch in OTP
+; the correct rom needs to be loaded first
+; because the script uses otp store functions from the rom
+
+print "running Shasta_store_patch.cmm"
+
+; Partition 1 has a size of 0x2000
+; Therefore make sure that the partition size is not exceeded
+&otp_partition=1
+
+; load the patch image via bin file ...
+; put the correct loading address here
+&addr=var.value(DRIVER_COMMON_STRUCT.scratchpad)
+&end_addr=0x20063FFF
+DATA.LOAD.BINARY ".\build\patch\patch.bin" &addr--&end_addr /nosymbol
+
+; Read the size of the patch with is at position 4 of the header
+&size_addr=D:(&addr+4)
+PRINT &size_addr
+
+&size=DATA.SHORT(&size_addr)
+PRINT &size
+
+; Stop the system
+BREAK
+
+GO
+WAIT 1s
+BREAK
+
+V os_running=0
+
+; Run command to store the patch to OTP and break at the end of the function
+; Throw is not working in this context because it is not setup
+R.S PC otp_fs_command_store
+R.S R0 &otp_partition
+R.S R1 &addr
+R.S R2 &size
+B.S otp_fs_command_store\86  /P
+; Set a break point at the log_write to see if there was an error
+;B.S log_write
+;B.S OTP_Write
+GO
+WAIT 1s
+
+; Reset and restart the system
+SYSTEM.RESETTARGET
+DATA.DUMP 0x10024000--0x10026000
+B.S user_drv_init
+PRINT "Start from Reset"
+GO
+

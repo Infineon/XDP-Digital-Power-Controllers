@@ -1,0 +1,8 @@
+===============================================================================
+2023-09-15 10:36:37 Firmware Details:
+       Version UTC Tag:    0x65049625
+       Firmware Project:   "patch_DR_HSC_Infineon"
+User:
+       WIN Login:          "INFINEON\seetweireniv"
+===============================================================================
+- build with version number

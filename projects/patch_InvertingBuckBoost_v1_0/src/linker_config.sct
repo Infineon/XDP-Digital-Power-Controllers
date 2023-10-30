@@ -1,0 +1,76 @@
+#! armcc -E -I build/patch/
+
+; =============================================================================
+; File:    linkconf_opus.sct
+; Brief:   Scatter file for the ARM Linker "armlink".
+;          Used to map object file content to the memory of the OPUS+ system.
+;          Values come from the Internal Target Specification (Rev 0.11).
+;          Sections are specified in startup_opus.s or automatically by the
+;          linker (e.g. .bss, .text, .data).
+; =============================================================================
+
+; The following file is generated during the patch build process and contains
+; the RAM start and end addresses, which are based on the input reference
+; parsed ELF files
+#include "patch_link_location.h"
+
+; XDPP1100 has its ROM beginning at 0x10000000, sized 80kByte
+#define rom_base 0x10000000
+#define rom_size 80*1024
+
+; XDPP1100 has its RAM beginning at 0x2005C000, sized 32kByte
+#define ram_base 0x2005C000
+#define ram_size 32*1024
+
+; XDPP1100 has its OTP beginning at 0x10020000, sized 64kByte
+#define otp_base 0x10020000
+#define otp_size 64*1024
+
+; Header size for a versioned patch
+#define otp_versioned_patch_header_size 28
+
+; We want to have the lower RAM addresses for patches. Since the linker does
+; not provide a way to set the sections from top to bottom we chose an
+; empiric address at the middle for the first section.
+#define space_patches 0x200
+#define ram_globals_base ram_base+space_patches
+
+
+; Here we define the patch size we allocate 4 patch regions, each 4k in size this means we  
+; 16k for data
+#define otp_data_base   otp_base 
+#define otp_data_size   0x4000 
+; 16k each for patches
+#define otp_patch1_base   otp_data_base + otp_data_size  
+#define otp_patch1_size 0x4000
+#define otp_patch1_effective_size otp_patch1_size - otp_versioned_patch_header_size
+#define otp_patch2_base   otp_patch1_base + otp_patch1_size
+#define otp_patch2_size 0x4000
+#define otp_patch3_base   otp_patch2_base + otp_patch2_size
+#define otp_patch3_size 0x4000
+#define otp_patch4_base   otp_patch3_base + otp_patch3_size
+#define otp_patch4_size 0x0
+
+
+; Needs to be filled out according to the needs of the patch
+PATCH_LOAD otp_patch1_base + otp_versioned_patch_header_size otp_patch1_effective_size 
+{
+    
+    OTP_PATCHES otp_patch1_base + otp_versioned_patch_header_size otp_patch1_effective_size
+    {
+        * (+RO)         ; (.text)
+    }
+	
+    RAM_INIT LINKER_RAM_RANGE_START LINKER_RAM_RANGE_SIZE
+    {
+        * (+RW, +ZI)    ; (.data | .bss)
+    }
+	
+	RAM_EXEC +0
+    {
+		* (RAM_EXEC)
+    }
+}
+
+
+; "*" means: from arbitrary objects
