@@ -16,8 +16,9 @@ patching_help:
 	@$(ECHO) 'make patching            Create patch bin with version using gcc'
 
 BUILD_TYPE = test-patch
-PROJECT_FILE= ./project_name.txt
-PROJECT_NAME=$(shell cat $(PROJECT_FILE))
+PROJECT_FILE:= project_name.txt
+test = $(if $(filter $(OS),Windows),type,cat)
+PROJECT_NAME=$(shell $(test) $(PROJECT_FILE))
 PATCH_VERSION = --versionoption=1
 PATCH_ZIP = --zipoption=0
 patching:
