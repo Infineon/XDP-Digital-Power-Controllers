@@ -1,0 +1,27 @@
+var struct___d_m_a___s_h__s =
+[
+    [ "CHNL_WAITONREQ_STATUS", "struct___d_m_a___s_h__s.html#a7cf1a69005be80ab9a4d14982bf4f502", null ],
+    [ "DMA_ALT_CTRL_BASE_PTR", "struct___d_m_a___s_h__s.html#ac629762df77777a65b51c226837c9d86", null ],
+    [ "DMA_CFG", "struct___d_m_a___s_h__s.html#a5de90db64cb853387bff565b8f93854f", null ],
+    [ "DMA_CHNL_ENABLE_CLR", "struct___d_m_a___s_h__s.html#a8d159a807ee4786fa9612055efe86b41", null ],
+    [ "DMA_CHNL_ENABLE_SET", "struct___d_m_a___s_h__s.html#acf00a7143f19e41ab3080040e0b41022", null ],
+    [ "DMA_CHNL_PRI_ALT_CLR", "struct___d_m_a___s_h__s.html#af174c092f3dd4c6b02def92c62f4891f", null ],
+    [ "DMA_CHNL_PRI_ALT_SET", "struct___d_m_a___s_h__s.html#a0a6b877d023b3051e367468d7454fc87", null ],
+    [ "DMA_CHNL_PRIORITY_CLR", "struct___d_m_a___s_h__s.html#af952e00b01a6686b0cd673dced099837", null ],
+    [ "DMA_CHNL_PRIORITY_SET", "struct___d_m_a___s_h__s.html#afe2d2696428812a850edae752265cb66", null ],
+    [ "DMA_CHNL_REQ_MASK_CLR", "struct___d_m_a___s_h__s.html#a594000f2f7949f676dd349fa54be3b11", null ],
+    [ "DMA_CHNL_REQ_MASK_SET", "struct___d_m_a___s_h__s.html#aa3f4f86d438a9542997af8e9dc02645c", null ],
+    [ "DMA_CHNL_SW_REQUEST", "struct___d_m_a___s_h__s.html#ac97cb2cffff1dfecd2c8ae9bd75a86dd", null ],
+    [ "DMA_CHNL_USEBURST_CLR", "struct___d_m_a___s_h__s.html#a18cb5399cdf132a23e704287e0162c5d", null ],
+    [ "DMA_CHNL_USEBURST_SET", "struct___d_m_a___s_h__s.html#a5ba9fe81f012b395e9404f536c5165d9", null ],
+    [ "DMA_CTRL_BASE_PTR", "struct___d_m_a___s_h__s.html#a3bbbb25e78af3504987dd19613e7e216", null ],
+    [ "DMA_ERR_CLR", "struct___d_m_a___s_h__s.html#a3eade6f9473f33237878d32f97704ad7", null ],
+    [ "DMA_STATUS", "struct___d_m_a___s_h__s.html#ae16c1ecf52bfb8eedcadbfa508b8e8c7", null ],
+    [ "ICR", "struct___d_m_a___s_h__s.html#acf6b4a0bddd951d73a63bc8fa863c26f", null ],
+    [ "IMSC", "struct___d_m_a___s_h__s.html#a34b7adaa723c3aae160e468a94e78b6e", null ],
+    [ "ISR", "struct___d_m_a___s_h__s.html#a69d99f99a6131e2cdf26fdf1e19c17a5", null ],
+    [ "MIS", "struct___d_m_a___s_h__s.html#abe7541df838ef37b74651a014c130f48", null ],
+    [ "REGMEMGAP0", "struct___d_m_a___s_h__s.html#a8610dbfbb643038f854b36e9d438fadf", null ],
+    [ "REGMEMGAP1", "struct___d_m_a___s_h__s.html#a05919f7e7fbda16771287efb65e07b69", null ],
+    [ "RIS", "struct___d_m_a___s_h__s.html#a3972d615848632c90e18cfe0f68b57fc", null ]
+];

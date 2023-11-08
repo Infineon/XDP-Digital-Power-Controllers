@@ -1,0 +1,77 @@
+; This script connects the debugger to Shasta
+
+print %STRING "running setup_shasta.cmm"
+
+; get me an eventual argument, holding the path and filename for a user-specific setup script
+LOCAL &user_setup_script
+entry &user_setup_script
+
+; OPUS uses an off-the-shelf M0, tell the debugger so ...
+SYStem.CPU CORTEXM0
+
+; Enable software reset through the AIRCR register upon SYS.M UP.
+; Since all ARM Cortex allow/implement such a SW reset, it's applicable for CORTEXM0 and the debugger has actually control over it. 
+; For OPUS, see CPUS spec, AIRCR register. 
+SYStem.Option DISableSOFTREset OFF
+
+; disallow the debugger to drive the nTRST line. Instead, 5 consecutive TCK pulses
+; with TMS = high are asserted to reset the TAP controller. Btw, "TRST" stands for "Test reset"
+;
+; OPUS does not implement the nTRST signal, instead it wants 5 TCK pulses with TMS high to have its TAP controller reset, 
+; therefore we need to disable this.  
+SYStem.Option TRST OFF
+
+; Disable debugger to drive the nSRST line on the JTAG connector. 
+; The reset on the JTAG connector is connected to chip primary reset.
+SYStem.Option EnReset OFF
+
+; Halt the core after reset ...
+; todo: try to set it ON it was OFF
+SYStem.Option ResBreak ON
+
+; disable run-time memory access through the CPU
+; Allowing the debugger to access the target memory through the CPU involves stopping the CPU.
+; This is not desired and not necessary, since ARM's debug interface is connected to the bus matrix of the device, 
+; thus it does any memory access without involving the CPU. This does not stop the core, but essentially does cycle-stealing on the bus system.
+; SYS.CA DIS 
+SYStem.CpuAccess Denied
+
+; tell the debugger to use debug logic (DAP) for any memory accesses that are needed to update any memory-related windows. 
+SYStem.MemAccess DAP
+; allow the debugger to access memory and update its memory windows while the core is running. This access is done through DAP
+SYStem.Option DUALPORT ON
+
+; OPUS uses SWD, so tell the debugger to use it
+SYS.CONFIG SWDP ON
+; In case of chips/boards that do not behave well with 10MHz.
+; we might want to reduce the JTAG clk. eg. 5.0 MHz
+SYS.JC 1.0MHZ
+
+; reset the target, set the core to debug mode and stop it:
+; - nSRST line will pulsed (depending on EnReset setting => as per above setting, not done)
+; - and a software reset is performed (depending on DISableSOFTREset setting => as per above setting, soft reset is issued)  
+; - the core is stopped and all regs are set to default (=> a BREAK command is issued by the debugger and registers are re-initialized)
+SYS.M UP
+
+; attach to the target, leave the target in a state as it is currently.
+; With above configuration, SYS.M ATTACH is pretty much the same as SYS.M UP except for the BREAK and the register init.
+;SYS.M ATTACH
+
+; Load the peripheral description for Shasta A11 into the CPU Menu
+PER.ReProgram ~~~~\..\..\T32\per\per_infineon_shasta.per
+ 
+// WinPOS 84 26 60. 9. 
+AREA
+
+print %STRING "done ..."
+
+; run a provided user script  
+if "&user_setup_script"!="" 
+(
+    if file.exist(&user_setup_script)
+    (
+        do &user_setup_script
+    )
+)
+
+ENDDO

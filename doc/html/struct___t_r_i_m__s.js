@@ -1,0 +1,26 @@
+var struct___t_r_i_m__s =
+[
+    [ "BG_TRIM", "struct___t_r_i_m__s.html#a7e95e393378f48e1aa4d5f133fef9de6", null ],
+    [ "CFG_NUM", "struct___t_r_i_m__s.html#a2d66224f0b31c41e5f0230a5731ac3a2", null ],
+    [ "IC_SERIAL", "struct___t_r_i_m__s.html#a87cde6d644d7f2eb1075c6f83f586f36", null ],
+    [ "IC_VERSION", "struct___t_r_i_m__s.html#ad651ec3db22b69caa7192a0d6c81f51f", null ],
+    [ "IS1_GAIN_TRIM", "struct___t_r_i_m__s.html#a6c02357fba1971d82bd3309a54a64058", null ],
+    [ "IS1_OFF_TRIM1", "struct___t_r_i_m__s.html#a0875e03b056f0115c3ca40d8f1d16dce", null ],
+    [ "IS1_OFF_TRIM2", "struct___t_r_i_m__s.html#a6146ca58500befccf1841a978888674d", null ],
+    [ "IS2_GAIN_TRIM", "struct___t_r_i_m__s.html#a931f83f3dd0de83dfd6dd463f7ec868a", null ],
+    [ "IS2_OFF_TRIM1", "struct___t_r_i_m__s.html#a62180b3b81ecd331b4f83507344a9fdc", null ],
+    [ "IS2_OFF_TRIM2", "struct___t_r_i_m__s.html#a6d499db8d7e7ee94ac187e198cecdbc3", null ],
+    [ "IS3_GAIN_TRIM", "struct___t_r_i_m__s.html#a5982c6ef7bfd9092baae20762b30d0fb", null ],
+    [ "IS3_OFF_TRIM1", "struct___t_r_i_m__s.html#a314c5d14ae2b5408fd8e2cfece3d1f72", null ],
+    [ "IS3_OFF_TRIM2", "struct___t_r_i_m__s.html#a1e222faf6864c23934df04fff3848307", null ],
+    [ "LO_TRIM", "struct___t_r_i_m__s.html#a10c443852256cb679ac16893fc08a631", null ],
+    [ "PROD_ID", "struct___t_r_i_m__s.html#a06341494e51d1275dc63064ff7c66adf", null ],
+    [ "SPARE_TRIM", "struct___t_r_i_m__s.html#a6edde00ee989fcb1fd6725ffb47b3c6b", null ],
+    [ "TS_TRIM1", "struct___t_r_i_m__s.html#aa7a6eb2ec7cdb55ecee3e710fd14f757", null ],
+    [ "TS_TRIM2", "struct___t_r_i_m__s.html#a7cd45741efda66be61368de068bef036", null ],
+    [ "TS_TRIM3", "struct___t_r_i_m__s.html#ae231781f0bfa380b56b2253e549768da", null ],
+    [ "TS_TRIM4", "struct___t_r_i_m__s.html#a79148729d01b832d7c5bd2c5dbaa3a11", null ],
+    [ "VS_OS_TRIM", "struct___t_r_i_m__s.html#a8e2b46616f0ca46226069e3bad6c8c7f", null ],
+    [ "VSP_GAIN_TRIM", "struct___t_r_i_m__s.html#afa7789b5273967cc301ddef1bff65f54", null ],
+    [ "VSP_OFF_TRIM", "struct___t_r_i_m__s.html#a8ee14b46d586fb1afc2eb4e6bfd1a47b", null ]
+];

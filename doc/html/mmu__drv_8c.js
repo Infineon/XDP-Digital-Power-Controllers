@@ -1,0 +1,28 @@
+var mmu__drv_8c =
+[
+    [ "MMU_OTP_LOWER_LIMIT", "mmu__drv_8c.html#a148fb9d3e174a184f68e8b03d919a0b3", null ],
+    [ "MMU_OTP_SIZE", "mmu__drv_8c.html#ac91f358f0be9418aea6b2e2d3e6edd82", null ],
+    [ "MMU_RAM1_LOWER_LIMIT", "mmu__drv_8c.html#aba7a4364ac54d65f5dba8334d786b860", null ],
+    [ "MMU_RAM1_SIZE", "mmu__drv_8c.html#ad063bc9619e278fa4ac7c9f447128abc", null ],
+    [ "MMU_RAM2_LOWER_LIMIT", "mmu__drv_8c.html#a769046c805d6954ef8290281bc247e33", null ],
+    [ "MMU_RAM2_SIZE", "mmu__drv_8c.html#aecaeb6ee11e86456e76626c8f0bbd564", null ],
+    [ "MMU_REG_PROT_MASK", "mmu__drv_8c.html#a97b215d4be8b021290f632af35542d24", null ],
+    [ "MMU_ROM_LOWER_LIMIT", "mmu__drv_8c.html#ae958ade011568db1f9e1dd46c636abed", null ],
+    [ "MMU_ROM_SIZE", "mmu__drv_8c.html#a00ed52fb932e6d0d87dc77a9f3754b2d", null ],
+    [ "check_limits", "mmu__drv_8c.html#af3e195672580fcc0576a448a2ddedca3", null ],
+    [ "MMU_ClearMemProtection", "mmu__drv_8c.html#a69c843a426c26f36dbfb6315c8a6ed15", null ],
+    [ "MMU_ClearRegProtection", "mmu__drv_8c.html#aa9be48ed82a62a4013281bc63faa6415", null ],
+    [ "MMU_ClearStatus", "mmu__drv_8c.html#a4ea66f192cf11c960e681e1de7f511b0", null ],
+    [ "MMU_Configure", "mmu__drv_8c.html#a62779958d26eaefa5cac089a3275cc07", null ],
+    [ "MMU_GetRegProtection", "mmu__drv_8c.html#af2a9c1ae4765246911b5a44b9c9b69c4", null ],
+    [ "MMU_GetStatus", "mmu__drv_8c.html#afdc39bccbbef5660bb1a321a9021e472", null ],
+    [ "MMU_GetVersion", "mmu__drv_8c.html#a4cbae15fe157a467f1bba5b467378aab", null ],
+    [ "MMU_Hardfault_IRQHandler", "mmu__drv_8c.html#a36a9007cd857d20f48b84b9dbd16e88d", null ],
+    [ "MMU_Initialize", "mmu__drv_8c.html#a17c5309771c770b6ee91d60d7843cde3", null ],
+    [ "MMU_SetMemProtection", "mmu__drv_8c.html#ac809d2f50bf0d26848d5f87a5d2116df", null ],
+    [ "MMU_SetRegProtection", "mmu__drv_8c.html#a4f5dc4d8c4a07238305e1f4a1fdff586", null ],
+    [ "MMU_Uninitialize", "mmu__drv_8c.html#a8df5763166df22ff11e8094a669ecc39", null ],
+    [ "MMU_UpdateStatus", "mmu__drv_8c.html#a6ccaffbb293dd05c3c95f121da22f84a", null ],
+    [ "Driver_MMU", "mmu__drv_8c.html#a77af1edb8574f52a8d8faf6e31ee940e", null ],
+    [ "MMU_Status", "mmu__drv_8c.html#adf2c64dd9559a5f0152106014ec87b77", null ]
+];

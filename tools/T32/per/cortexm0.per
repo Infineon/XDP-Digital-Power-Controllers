@@ -1,0 +1,473 @@
+                                                                                                                                                                                                        
+; CortexM1 On-Chip Peripherals
+; --------------------------------------------------
+; Core          : ARM6-M
+; Manufacturer  : ARM
+;
+; Author        : MPO
+; Date          : 29.02.2008
+; Doc           : Cortex-M1_TechnicalReferenceManualRevC_r0p1-01rel0
+; Status        : released
+; --------------------------------------------------
+; CortexM1 @(#) Feb 29 2008
+
+
+config 16. 8.
+
+width 0xe
+
+tree "Nested Vectored Interrupt Controller"
+ base d:0xe000e000
+width 0xf
+
+group.long 0x100++0x03
+ line.long 0x00 "SET/CLREN,Interrupt Set/Clear Enable Register"
+   setclrfld.long 0x00 31. 0x00 31. 0x80 31. " SET/CLRENA31 ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+   setclrfld.long 0x00 30. 0x00 30. 0x80 30. "     SET/CLRENA30 ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+   setclrfld.long 0x00 29. 0x00 29. 0x80 29. "     SET/CLRENA29 ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+  textline "                        "
+   setclrfld.long 0x00 28. 0x00 28. 0x80 28. " SET/CLRENA28 ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+   setclrfld.long 0x00 27. 0x00 27. 0x80 27. "     SET/CLRENA27 ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+   setclrfld.long 0x00 26. 0x00 26. 0x80 26. "     SET/CLRENA26 ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+  textline "                        "
+   setclrfld.long 0x00 25. 0x00 25. 0x80 25. " SET/CLRENA25 ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+   setclrfld.long 0x00 24. 0x00 24. 0x80 24. "     SET/CLRENA24 ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+   setclrfld.long 0x00 23. 0x00 23. 0x80 23. "     SET/CLRENA23 ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+  textline "                        "
+   setclrfld.long 0x00 22. 0x00 22. 0x80 22. " SET/CLRENA22 ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+   setclrfld.long 0x00 21. 0x00 21. 0x80 21. "     SET/CLRENA21 ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+   setclrfld.long 0x00 20. 0x00 20. 0x80 20. "     SET/CLRENA20 ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+  textline "                        "
+   setclrfld.long 0x00 19. 0x00 19. 0x80 19. " SET/CLRENA19 ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+   setclrfld.long 0x00 18. 0x00 18. 0x80 18. "     SET/CLRENA18 ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+   setclrfld.long 0x00 17. 0x00 17. 0x80 17. "     SET/CLRENA17 ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+  textline "                        "
+   setclrfld.long 0x00 16. 0x00 16. 0x80 16. " SET/CLRENA16 ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+   setclrfld.long 0x00 15. 0x00 15. 0x80 15. "     SET/CLRENA15 ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+   setclrfld.long 0x00 14. 0x00 14. 0x80 14. "     SET/CLRENA14 ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+  textline "                        "
+   setclrfld.long 0x00 13. 0x00 13. 0x80 13. " SET/CLRENA13 ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+   setclrfld.long 0x00 12. 0x00 12. 0x80 12. "     SET/CLRENA12 ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+   setclrfld.long 0x00 11. 0x00 11. 0x80 11. "     SET/CLRENA11 ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+  textline "                        "
+   setclrfld.long 0x00 10. 0x00 10. 0x80 10. " SET/CLRENA10 ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+   setclrfld.long 0x00 9. 0x00 9. 0x80 9. "     SET/CLRENA9  ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+   setclrfld.long 0x00 8. 0x00 8. 0x80 8. "     SET/CLRENA8  ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+  textline "                        "
+   setclrfld.long 0x00 7. 0x00 7. 0x80 7. " SET/CLRENA7  ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+   setclrfld.long 0x00 6. 0x00 6. 0x80 6. "     SET/CLRENA6  ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+   setclrfld.long 0x00 5. 0x00 5. 0x80 5. "     SET/CLRENA5  ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+  textline "                        "
+   setclrfld.long 0x00 4. 0x00 4. 0x80 4. " SET/CLRENA4  ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+   setclrfld.long 0x00 3. 0x00 3. 0x80 3. "     SET/CLRENA3  ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+   setclrfld.long 0x00 2. 0x00 2. 0x80 2. "     SET/CLRENA2  ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+  textline "                        "
+   setclrfld.long 0x00 1. 0x00 1. 0x80 1. " SET/CLRENA1  ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+   setclrfld.long 0x00 0. 0x00 0. 0x80 0. "     SET/CLRENA0  ,Interrupt Set/Clear Enable Bit" "Disabled,Enabled"
+
+ 
+group.long 0x200++0x03 
+ line.long 0x00 "SET/CLRPEN,Interrupt Set/Clear Pending Register"
+  setclrfld.long 0x00 31. 0x00 31. 0x80 31. " SET/CLRPEN31 ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  setclrfld.long 0x00 30. 0x00 30. 0x80 30. "  SET/CLRPEN30 ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  setclrfld.long 0x00 29. 0x00 29. 0x80 29. "  SET/CLRPEN29 ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  textline "                        "
+  setclrfld.long 0x00 28. 0x00 28. 0x80 28. " SET/CLRPEN28 ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  setclrfld.long 0x00 27. 0x00 27. 0x80 27. "  SET/CLRPEN27 ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  setclrfld.long 0x00 26. 0x00 26. 0x80 26. "  SET/CLRPEN26 ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  textline "                        "
+  setclrfld.long 0x00 25. 0x00 25. 0x80 25. " SET/CLRPEN25 ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  setclrfld.long 0x00 24. 0x00 24. 0x80 24. "  SET/CLRPEN24 ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  setclrfld.long 0x00 23. 0x00 23. 0x80 23. "  SET/CLRPEN23 ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  textline "                        "
+  setclrfld.long 0x00 22. 0x00 22. 0x80 22. " SET/CLRPEN22 ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  setclrfld.long 0x00 21. 0x00 21. 0x80 21. "  SET/CLRPEN21 ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  setclrfld.long 0x00 20. 0x00 20. 0x80 20. "  SET/CLRPEN20 ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  textline "                        "
+  setclrfld.long 0x00 19. 0x00 19. 0x80 19. " SET/CLRPEN19 ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  setclrfld.long 0x00 18. 0x00 18. 0x80 18. "  SET/CLRPEN18 ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  setclrfld.long 0x00 17. 0x00 17. 0x80 17. "  SET/CLRPEN17 ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  textline "                        "
+  setclrfld.long 0x00 16. 0x00 16. 0x80 16. " SET/CLRPEN16 ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  setclrfld.long 0x00 15. 0x00 15. 0x80 15. "  SET/CLRPEN15 ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  setclrfld.long 0x00 14. 0x00 14. 0x80 14. "  SET/CLRPEN14 ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  textline "                        "
+  setclrfld.long 0x00 13. 0x00 13. 0x80 13. " SET/CLRPEN13 ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  setclrfld.long 0x00 12. 0x00 12. 0x80 12. "  SET/CLRPEN12 ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  setclrfld.long 0x00 11. 0x00 11. 0x80 11. "  SET/CLRPEN11 ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  textline "                        "
+  setclrfld.long 0x00 10. 0x00 10. 0x80 10. " SET/CLRPEN10 ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  setclrfld.long 0x00 9. 0x00 9. 0x80 9. "  SET/CLRPEN9  ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  setclrfld.long 0x00 8. 0x00 8. 0x80 8. "  SET/CLRPEN8  ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  textline "                        "
+  setclrfld.long 0x00 7. 0x00 7. 0x80 7. " SET/CLRPEN7  ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  setclrfld.long 0x00 6. 0x00 6. 0x80 6. "  SET/CLRPEN6  ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  setclrfld.long 0x00 5. 0x00 5. 0x80 5. "  SET/CLRPEN5  ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  textline "                        "
+  setclrfld.long 0x00 4. 0x00 4. 0x80 4. " SET/CLRPEN4  ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  setclrfld.long 0x00 3. 0x00 3. 0x80 3. "  SET/CLRPEN3  ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  setclrfld.long 0x00 2. 0x00 2. 0x80 2. "  SET/CLRPEN2  ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  textline "                        "  
+  setclrfld.long 0x00 1. 0x00 1. 0x80 1. " SET/CLRPEN1  ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  setclrfld.long 0x00 0. 0x00 0. 0x80 0. "  SET/CLRPEN0  ,Interrupt Set/Clear Pending" "Not pending,Pending"
+  
+ 
+tree "Interrupt Priority Registers"
+ base d:0xe000e000
+width 7.
+
+group.long 0x400++0x41f
+
+ line.long 0x0 "INT0,Interrupt Priority Register"
+  bitfld.long 0x0 30.--31. " IP_3  ,Priority of interrupt 3" "0,1,2,3"
+  bitfld.long 0x0 22.--23. "  IP_2  ,Priority of interrupt 2" "0,1,2,3"
+  bitfld.long 0x0 14.--15. "  IP_1  ,Priority of interrupt 1" "0,1,2,3"
+  bitfld.long 0x0 6.--7.   "  IP_0  ,Priority of interrupt 0" "0,1,2,3"
+
+ line.long 0x4 "INT1,Interrupt Priority Register"
+  bitfld.long 0x4 30.--31. " IP_7  ,Priority of interrupt 7" "0,1,2,3"
+  bitfld.long 0x4 22.--23. "  IP_6  ,Priority of interrupt 6" "0,1,2,3"
+  bitfld.long 0x4 14.--15. "  IP_5  ,Priority of interrupt 5" "0,1,2,3"
+  bitfld.long 0x4 6.--7.   "  IP_4  ,Priority of interrupt 4" "0,1,2,3"
+
+ line.long 0x8 "INT2,Interrupt Priority Register"
+  bitfld.long 0x8 30.--31. " IP_11 ,Priority of interrupt 11" "0,1,2,3"
+  bitfld.long 0x8 22.--23. "  IP_10 ,Priority of interrupt 10" "0,1,2,3"
+  bitfld.long 0x8 14.--15. "  IP_9  ,Priority of interrupt 9" "0,1,2,3"
+  bitfld.long 0x8 6.--7.   "  IP_8  ,Priority of interrupt 8" "0,1,2,3"
+
+ line.long 0xC "INT3,Interrupt Priority Register"
+  bitfld.long 0xC 30.--31. " IP_15 ,Priority of interrupt 15" "0,1,2,3"
+  bitfld.long 0xC 22.--23. "  IP_14 ,Priority of interrupt 14" "0,1,2,3"
+  bitfld.long 0xC 14.--15. "  IP_13 ,Priority of interrupt 13" "0,1,2,3"
+  bitfld.long 0xC 6.--7.   "  IP_12 ,Priority of interrupt 12" "0,1,2,3"
+
+ line.long 0x10 "INT4,Interrupt Priority Register"
+  bitfld.long 0x10 30.--31. " IP_19 ,Priority of interrupt 19" "0,1,2,3"
+  bitfld.long 0x10 22.--23. "  IP_18 ,Priority of interrupt 18" "0,1,2,3"
+  bitfld.long 0x10 14.--15. "  IP_17 ,Priority of interrupt 17" "0,1,2,3"
+  bitfld.long 0x10 6.--7.   "  IP_16 ,Priority of interrupt 16" "0,1,2,3"
+
+ line.long 0x14 "INT5,Interrupt Priority Register"
+  bitfld.long 0x14 30.--31. " IP_23 ,Priority of interrupt 23" "0,1,2,3"
+  bitfld.long 0x14 22.--23. "  IP_22 ,Priority of interrupt 22" "0,1,2,3"
+  bitfld.long 0x14 14.--15. "  IP_21 ,Priority of interrupt 21" "0,1,2,3"
+  bitfld.long 0x14 6.--7.   "  IP_20 ,Priority of interrupt 20" "0,1,2,3"
+
+ line.long 0x18 "INT6,Interrupt Priority Register"
+  bitfld.long 0x18 30.--31. " IP_27 ,Priority of interrupt 27" "0,1,2,3"
+  bitfld.long 0x18 22.--23. "  IP_26 ,Priority of interrupt 26" "0,1,2,3"
+  bitfld.long 0x18 14.--15. "  IP_25 ,Priority of interrupt 25" "0,1,2,3"
+  bitfld.long 0x18 6.--7.   "  IP_24 ,Priority of interrupt 24" "0,1,2,3"
+
+ line.long 0x1C "INT7,Interrupt Priority Register"
+  bitfld.long 0x1C 30.--31. " IP_31 ,Priority of interrupt 31" "0,1,2,3"
+  bitfld.long 0x1C 22.--23. "  IP_30 ,Priority of interrupt 30" "0,1,2,3"
+  bitfld.long 0x1C 14.--15. "  IP_29 ,Priority of interrupt 29" "0,1,2,3"
+  bitfld.long 0x1C 6.--7.   "  IP_28 ,Priority of interrupt 28" "0,1,2,3"
+
+width 7.  
+  
+  
+  
+  
+  
+tree.end  
+tree.end 
+ 
+
+tree "Debug Control"
+ base d:0xe000ed00
+width 0xa
+
+group.long 0x30++0x03
+  line.long 0x00 "DFSR,Data Fault Status Register"
+   eventfld.long 0x00 4. " EXTERNAL          ,External debug request flag" "No occurred,Occurred"
+   eventfld.long 0x00 3. "  VCATCH             ,Vector catch flag" "No occurred,Occurred"
+  textline "                   "
+   eventfld.long 0x00 2. " DWTRAP            ,Data Watchpoint flag" "No match,Match"
+  textline "                   "
+   eventfld.long 0x00 1. " BKPT              ,BKPT flag" "No match,Match"
+   eventfld.long 0x00 0. "     HALTED             ,Halt request flag" "No request,Request"
+
+if (((d.l(sd:0xf0))&0x01)==0x00)   
+ group.long 0xf0++0x03
+  line.long 0x00 "DHCSR,Debug Halting Control and Status Register"
+   bitfld.long 0x00 31. " DBGKEY            ,Debug Key" "0,1"
+   bitfld.long 0x00 30. "            DBGKEY             ,Debug Key" "0,1"
+   textline "                   "
+   bitfld.long 0x00 29. " DBGKEY            ,Debug Key" "0,1"
+   bitfld.long 0x00 28. "            DBGKEY             ,Debug Key" "0,1"
+   textline "                   "
+   bitfld.long 0x00 27. " DBGKEY            ,Debug Key" "0,1"
+   bitfld.long 0x00 26. "            DBGKEY             ,Debug Key" "0,1"
+   textline "                   "
+   bitfld.long 0x00 25. " S_RESET_ST/DBGKEY ,Core Reset/Debug Key" "No reset,Reset"
+   bitfld.long 0x00 24. "     S_RETIRE_ST/DBGKEY ,Instruction completed since last read/Debug Key" "Not completed,Completed"
+   textline "                   "
+   bitfld.long 0x00 23. " DBGKEY            ,Debug Key" "0,1"
+   bitfld.long 0x00 22. "            DBGKEY             ,Debug Key" "0,1"
+   textline "                   "
+   bitfld.long 0x00 21. " DBGKEY            ,Debug Key" "0,1"
+   bitfld.long 0x00 20. "            DBGKEY             ,Debug Key" "0,1"
+   textline "                   "
+   bitfld.long 0x00 19. " DBGKEY            ,Debug Key" "0,1"
+   bitfld.long 0x00 18. "            DBGKEY             ,Debug Key" "0,1"
+   textline "                   "
+   bitfld.long 0x00 17. " S_HALT/DBGKEY     ,Core Halted Status/Debug Key" "Not halted,Halted"
+   bitfld.long 0x00 16. "   S_REGRDY/DBGKEY    ,Register R/W on the Debug Core Register Selector/Debug Key" "Not available,Available"
+   textline "                   "
+   bitfld.long 0x00 0. " C_DEBUGEN         ,Debug Enable" "Disabled,Enabled"
+else 
+ group.long 0xf0++0x03
+  line.long 0x00 "DHCSR,Debug Halting Control and Status Register"
+   bitfld.long 0x00 31. " DBGKEY            ,Debug Key" "0,1"
+   bitfld.long 0x00 30. "            DBGKEY             ,Debug Key" "0,1"
+   textline "                   "
+   bitfld.long 0x00 29. " DBGKEY            ,Debug Key" "0,1"
+   bitfld.long 0x00 28. "            DBGKEY             ,Debug Key" "0,1"
+   textline "                   "
+   bitfld.long 0x00 27. " DBGKEY            ,Debug Key" "0,1"
+   bitfld.long 0x00 26. "            DBGKEY             ,Debug Key" "0,1"
+   textline "                   "
+   bitfld.long 0x00 25. " S_RESET_ST/DBGKEY ,Core Reset/Debug Key" "No reset,Reset"
+   bitfld.long 0x00 24. "     S_RETIRE_ST/DBGKEY ,Instruction completed since last read/Debug Key" "Not read,Read"
+   textline "                   "
+   bitfld.long 0x00 23. " DBGKEY            ,Debug Key" "0,1"
+   bitfld.long 0x00 22. "            DBGKEY             ,Debug Key" "0,1"
+   textline "                   "
+   bitfld.long 0x00 21. " DBGKEY            ,Debug Key" "0,1"
+   bitfld.long 0x00 20. "            DBGKEY             ,Debug Key" "0,1"
+   textline "                   "
+   bitfld.long 0x00 19. " DBGKEY            ,Debug Key" "0,1"
+   bitfld.long 0x00 18. "            DBGKEY             ,Debug Key" "0,1"
+   textline "                   "
+   bitfld.long 0x00 17. " S_HALT/DBGKEY     ,Core Halted Status/Debug Key" "Not halted,Halted"
+   bitfld.long 0x00 16. "   S_REGRDY/DBGKEY    ,Register R/W on the Debug Core Register Selector/Debug Key" "Not available,Available"
+   textline "                   "
+   bitfld.long 0x00 3. " C_MASKINTS        ,Interrupts Mask" "Not masked,Masked"
+   bitfld.long 0x00 2. "   C_STEP             ,Steps the core in halted debug" "Not halted,Halted"
+   textline "                   "
+   bitfld.long 0x00 1. " C_HALT            ,Core Halted" "Not halted,Halted"
+   bitfld.long 0x00 0. "   C_DEBUGEN          ,Debug Enable" "Disabled,Enabled"
+endif
+  
+wgroup.long 0xf4++0x03
+ line.long 0x00 "DCRSR,Debug Core Selector Register"
+   bitfld.long 0x00 16. " REGWnR            ,Register Read/Write" "Read,Write"
+   bitfld.long 0x00 0.--4. "        REGSEL             ,Register Selection" "R0,R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11,R12,Current SP,LR,DebugReturnAddress,xPSR Flags,MSP,PSP,Reserved,CONTROL[1]/PRIMASK[0],Reserved,Reserved,Reserved,Reserved,Reserved,Reserved,Reserved,Reserved,Reserved,Reserved,Reserved"
+
+group.long 0xf8++0x07
+ line.long 0x00 "DCRDR,Debug Core Register Data Register"
+  hexmask.long 0x00 0.--31. 1 " DATA              ,Data for reading and writing registers to and from the processor"
+ line.long 0x04 "DEMCR,Debug Exception and Monitor Control Register"
+  bitfld.long 0x04 24. " DWTENA            ,Global enable or disable for the DW unit" "Disabled,Enabled"
+  bitfld.long 0x04 10. "     VC_HARDERR         ,Debug trap on a Hard Fault" "No error,Error"
+  textline "                   "
+  bitfld.long 0x04 0.  " VC_CORERESET      ,Reset Vector Catch" "No reset,Reset" 
+    
+    
+   
+   
+   
+   
+   
+tree.end  
+
+tree "ROM Table"
+ base d:0xe00ff000
+width 13.
+
+group.long 0x00++0x0f
+ line.long 0x00 "SCS,Points to the SCS at 0xE000E000" 
+ line.long 0x04 "DW ,Points to the DW unit at 0xE0001000"  
+ line.long 0x08 "BPU ,Points to the BPU at 0xE0002000"  
+ line.long 0x0c "END ,Marks of end of table" 
+rgroup.long 0xFCC++0x03
+       line.long 0x00 "MEMTYPE,MemType Register"
+       hexmask.long.byte 0x00 0.--7. 1 " PartNumber ,Part Number for Device [7:0]"
+ 
+rgroup.long 0xFD0--0xFFF
+    line.long 0x000 "PERIPHID4,Peripherial Identification Register 4"
+       bitfld.long 0x000 4.--7. " 4KBCOUNT   ,Number of 4KB Block Used" "1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384,32768"
+       bitfld.long 0x000 0.--3. "                  JEP106CC   ,JEP106 Continuation Code" "0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8,0x9,0xA,0xB,0xC,0xD,0xE,0xF"
+    line.long 0x004 "PERIPHID5,Peripherial Identification Register 5 (Reserved)"
+    line.long 0x008 "PERIPHID6,Peripherial Identification Register 6 (Reserved)"
+    line.long 0x00C "PERIPHID7,Peripherial Identification Register 7 (Reserved)"
+    line.long 0x010 "PERIPHID0,Peripherial Identification Register 0"
+       hexmask.long.byte 0x010 0.--7. 1 " PartNumber ,Part Number for Device [7:0]"
+    line.long 0x014 "PERIPHID1,Peripherial Identification Register 1"
+       bitfld.long 0x014 4.--7. " JEP106ID   ,JEP106 Identity Code [3:0]" "0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8,0x9,0xA,0xB,0xC,0xD,0xE,0xF"
+       bitfld.long 0x014 0.--3. "                    PartNumber ,Part Number for Device [11:8]" "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15"
+    line.long 0x018 "PERIPHID2,Peripherial Identification Register 2"
+       bitfld.long 0x018 4.--7. " REV        ,Revision Number of Peripherial" "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15"
+       bitfld.long 0x018 3. "                     JEP106USED ,JEP106 Identity Code Used" "Not used,Used"
+ textline "                      "
+       bitfld.long 0x018 0.--2. " JEP106ID   ,JEP106 Identity Code [6:4]" "0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7"
+    line.long 0x01C "PERIPHID3,Peripherial Identification Register 3"
+       bitfld.long 0x01C 4.--7. " REVAND     ,Manufacturer Revision Number" "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15"
+       bitfld.long 0x01C 0.--3. "                     CM         ,Customer Modified" "0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8,0x9,0xA,0xB,0xC,0xD,0xE,0xF"
+
+    line.long 0x020 "COMPONENT0,Component Identification Register 0"
+       hexmask.long.byte 0x008 0.--7. 1 " PREAMBLE   ,Preamble"
+    line.long 0x024 "COMPONENT1,Component Identification Register 1"
+       bitfld.long 0x004 4.--7. " COMPCLASS  ,Component Class" "Generic verification,ROM table,Reserved,Reserved,Reserved,Reserved,Reserved,Reserved,Reserved,Debug interface,Reserved,PTB,Reserved,OptimoDE DESS,Generic IP,PrimeCell peripherial"
+       bitfld.long 0x004 0.--3. "  PREAMBLE   ,Preamble" "0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8,0x9,0xA,0xB,0xC,0xD,0xE,0xF"
+    line.long 0x028 "COMPONENT2,Component Identification Register 2"
+       hexmask.long.byte 0x018 0.--7. 1 " PREAMBLE   ,Preamble"
+    line.long 0x02C "COMPONENT3,Component Identification Register 3"
+       hexmask.long.byte 0x01c 0.--7. 1 " PREAMBLE   ,Preamble"
+
+
+
+
+
+tree.end  
+
+tree "Breakpoint Unit"
+ base d:0xe0002000
+width 8.
+
+group.long 0x00++0x03
+ line.long 0x00 "BP_CTRL,Breakpoint Control Register"
+  bitfld.long 0x00 4.--7. " NUM_CODE1 ,Number of comparators" "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15" 
+  bitfld.long 0x00 1.     "              KEY  ,Key field" "No write,Write"
+  bitfld.long 0x00 0.     "  ENABLE ,Breakpoint unit enable bit" "Disabled,Enabled"
+group.long 0x8++0x03 
+ line.long 0x00 "B_COMP0,Breakpoint Comparator Registers 0"
+  bitfld.long 0x00 30.--31. " BP_MATCH  ,Happens when the COMP address is matched" "No matching,Lower halfword,Upper halfword,Both halfwords"
+  hexmask.long 0x00 2.--28. 2. "  COMP ,Comparison addres" 
+  bitfld.long 0x00 0.     "  ENABLE ,Compare enable for Breakpoint Comparator Register 0" "Disabled,Enabled"
+
+group.long 0xC++0x03 
+ line.long 0x00 "B_COMP1,Breakpoint Comparator Registers 1"
+  bitfld.long 0x00 30.--31. " BP_MATCH  ,Happens when the COMP address is matched" "No matching,Lower halfword,Upper halfword,Both halfwords"
+  hexmask.long 0x00 2.--28. 2. "  COMP ,Comparison addres" 
+  bitfld.long 0x00 0.     "  ENABLE ,Compare enable for Breakpoint Comparator Register 1" "Disabled,Enabled"
+
+group.long 0x10++0x03 
+ line.long 0x00 "B_COMP2,Breakpoint Comparator Registers 2"
+  bitfld.long 0x00 30.--31. " BP_MATCH  ,Happens when the COMP address is matched" "No matching,Lower halfword,Upper halfword,Both halfwords"
+  hexmask.long 0x00 2.--28. 2. "  COMP ,Comparison addres" 
+  bitfld.long 0x00 0.     "  ENABLE ,Compare enable for Breakpoint Comparator Register 2" "Disabled,Enabled"
+
+group.long 0x14++0x03 
+ line.long 0x00 "B_COMP3,Breakpoint Comparator Registers 3"
+  bitfld.long 0x00 30.--31. " BP_MATCH  ,Happens when the COMP address is matched" "No matching,Lower halfword,Upper halfword,Both halfwords"
+  hexmask.long 0x00 2.--28. 2. "  COMP ,Comparison addres" 
+  bitfld.long 0x00 0.     "  ENABLE ,Compare enable for Breakpoint Comparator Register 3" "Disabled,Enabled"
+
+  
+tree.end  
+
+tree "Data Watchpoint"
+ base d:0xe0001000
+width 14.
+rgroup.long 0x00++0x03
+ line.long 0x00 "DW_CTRL,DW Control Register "
+  bitfld.long 0x00 28.--31. " NUM_CODE1 ,Number of comparators" "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15"
+rgroup.long 0x1c++0x03
+ line.long 0x00 "DW_PCSR,DW Program Counter Sample Register"
+  hexmask.long 0x00 0.--31. 1. " EIASAMPLE ,Execution instruction address sample or 0xFFFFFFFF" 
+group.long 0x20++0x0b
+ line.long 0x00 "DW_COMP1,DW Comparator Register 1"
+  hexmask.long 0x00 0.--31. 1. " COMP1     ,Compare against PC or the data address" 
+ line.long 0x04 "DW_MASK1,DW Mask Register 1"
+  hexmask.long.byte 0x04 0.--4. 1. " MASK      ,Mask on data address when matching against COMP" 
+ line.long 0x08 "DW_FUNCTION1,DW Function Register 1"
+  bitfld.long 0x08 24. " MATCHED   ,Comparator match" "No match,Match"
+  bitfld.long 0x08 0.--3. "  FUNCTION , Settings for DW Function Registers" "Disabled,Reserved,Reserved,Reserved,On PC match,Read address,Write address,R/W address,Reserved,Reserved,Reserved,Reserved,Reserved,Reserved,Reserved"
+group.long 0x30++0x0b
+ line.long 0x00 "DW_COMP2,DW Comparator Register 2"
+  hexmask.long 0x00 0.--31. 1. " COMP      ,Compare against PC or the data address" 
+ line.long 0x04 "DW_MASK2,DW Mask Register 2 "
+  hexmask.long.byte 0x04 0.--4. 1. " MASK      ,Mask on data address when matching against COMP" 
+ line.long 0x08 "DW_FUNCTION2,DW Function Register 2"
+  bitfld.long 0x08 24. " MATCHED   ,Comparator match" "No match,Match"
+  bitfld.long 0x08 0.--3. "  FUNCTION , Settings for DW Function Registers" "Disabled,Reserved,Reserved,Reserved,On PC match,Read address,Write address,R/W address,Reserved,Reserved,Reserved,Reserved,Reserved,Reserved,Reserved"
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+tree.end  
+
+tree "System Control"
+ base d:0xe000e000
+ 
+width 0x8 
+group.long 0x10++0x0b
+ line.long 0x00 "STCSR,SysTick Control and Status Register"
+  bitfld.long 0x00 16. " COUNTFLAG    ,Returns 1 if timer counted to 0" "0,1"
+  bitfld.long 0x00 2.  "              CLKSOURCE     ,Always reads as one" "No effect,Processor clock"
+  textline "                 "
+  bitfld.long 0x00 1.  " TICKINT      , Counting down to 0 " "No SysTick,SysTick"
+  bitfld.long 0x00 0.  "     ENABLE        ,Counter enable" "Disabled,Enabled"
+  
+line.long 0x04 "STRVR,SysTick Reload Value Register"
+  hexmask.long.tbyte 0x04 0.--23. 1. " RELOAD       ,Value to load into the STCVR when the counter reaches 0"
+
+line.long 0x08 "STCVR,SysTick Current Value Register"
+  hexmask.long.tbyte 0x08 0.--23. 1. " CURRENT      ,Reads return the current value of the SysTick counter"
+  
+rgroup.long 0x1c++0x03
+line.long 0x00 "STCR,SysTick Calibration Value Register"
+  bitfld.long 0x00 31. " NOREF        ,Reads as one" "0,1"
+  bitfld.long 0x00 30. "              SKEW          ,Reads as zero" "0,1" 
+  textline "                 "
+  hexmask.long.tbyte 0x00 0.--23. 1. " TENMS        ,Indicates calibration value is not known"  
+rgroup.long 0xd00++0x03
+line.long 0x00 "CPUID,CPU ID Base Register"
+  hexmask.long.byte 0x00 24.--31. 1. " IMPLEMENTER  ,Implementor code" 
+  hexmask.long.byte 0x00 20.--23. 1. "             VARIANT       ,Implementation defined variant number" 
+  textline "                 "
+  hexmask.long.byte 0x00 4.--15. 1.  " PARTNO       ,Number of processor within family"
+     hexmask.long.byte 0x00 0.--3. 1. "             REVISION      ,Implementation defined revision number" 
+
+group.long 0xd04++0x03
+ line.long 0x00 "ICSR,Interrupt Control State Register"
+  bitfld.long 0x00 31. " NMIPENDSET   ,Setting this bit will activate an NMI" "No efect,Set pending"
+  bitfld.long 0x00 28. "    PENDSVSET     ,Set a pending PendSV interrupt" "No efect,Set pending"
+  textline "                 "
+  bitfld.long 0x00 27. " PENDSVCLR    ,Clear a pending PendSV interrupt" "No efect,Clear pending"
+  bitfld.long 0x00 26. "  PENDSTSET     ,Set a pending SysTick" "No efect,Set pending"
+  textline "                 "
+  bitfld.long 0x00 25. " PENDSVCLR    ,Clear a pending SysTick" "No efect,Clear pending"
+  bitfld.long 0x00 23. "  ISRPREEMPT    ,Pending exception service" "No service,Service"
+  textline "                 "
+  bitfld.long 0x00 22. " ISRPENDING   ,External interrupt pending flag" "No interrupt,Interrupt"
+  hexmask.long.byte 0x00 12.--17. 1. "   VECTPENDING   ,Active exception number field" 
+  textline "                 "
+  hexmask.long.byte 0x00 0.--5. 1.  " VECTACTIVET  ,Active exception number field" 
+group.long 0xd0c++0x03  
+ line.long 0x00 "AIRCR,Application Interrupt and Reset Control Register"  
+  hexmask.long.word 0x00 16.--31. 1 " VECTKEY      ,Vector Key" 
+  bitfld.long 0x00 15. "           ENDIANNESS    ,Data endianness bit" "Little-endian,Big-endian"
+  textline "                 "
+  bitfld.long 0x00 2. " SYSRESETREQ  ,System reset setup request" "No efect,Reset"
+  bitfld.long 0x00 1. "       VECTCLRACTIVE ,Clears all active state information" "No clear,Clear"
+group.long 0xd1c++0x0b
+ line.long 0x00 "SHPR2,System Handler Priority Register 2"  
+  bitfld.long 0x00 30.--31. " PRI_11       ,Priority of system handler 11-SVCall" "00,01,10,11" 
+  
+ line.long 0x04 "SHPR3,System Handler Priority Register 3"  
+  bitfld.long 0x04 30.--31. " PRI_15       ,Priority of system handler 15-SysTick" "00,01,10,11"  
+  bitfld.long 0x04 22.--23. "             PRI_14        ,Priority of system handler 14- PendSV" "00,01,10,11"  
+  
+ line.long 0x08 "SHCSR,System Handler Control and State Register"  
+  bitfld.long 0x08 15. " SVCALLPENDED ,Reads as 1 if SVCall is pended" "Not pended,Pended" 
+tree.end  
+
+textline " "
+
+

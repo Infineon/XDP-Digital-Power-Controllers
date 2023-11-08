@@ -1,0 +1,27 @@
+var struct___s_s_p__s =
+[
+    [ "REGMEMGAP0", "struct___s_s_p__s.html#a458c3191a263a1fa7dcac84559f11c0d", null ],
+    [ "REGMEMGAP1", "struct___s_s_p__s.html#a0f9872157e96d8eb3c4cac42bfd76d5a", null ],
+    [ "SSPCPSR", "struct___s_s_p__s.html#a3ee057340627ef169f03061c1507a291", null ],
+    [ "SSPCR0", "struct___s_s_p__s.html#a3d9c203cbef05959d52eed101ee65861", null ],
+    [ "SSPCR1", "struct___s_s_p__s.html#ab419c57fa0fd9b0affa7777ffe3cd107", null ],
+    [ "SSPDMACR", "struct___s_s_p__s.html#a76d53f48b60d7d92db2ad3a68150b786", null ],
+    [ "SSPDR", "struct___s_s_p__s.html#a04a3125e3e47766167fb299e8c3207b0", null ],
+    [ "SSPICR", "struct___s_s_p__s.html#ad16de2eda5a6bba56452d7aa220c0307", null ],
+    [ "SSPIMSC", "struct___s_s_p__s.html#a7442e4285b5343b90d734fcb6badcf67", null ],
+    [ "SSPITIP", "struct___s_s_p__s.html#a76c0da6e1c1916457502abec99926d8b", null ],
+    [ "SSPITOP", "struct___s_s_p__s.html#ab2d156e4629c3f6fb9e98b69f168bd78", null ],
+    [ "SSPMIS", "struct___s_s_p__s.html#a92cf44dff86cce3fac5340ddd8577ea2", null ],
+    [ "SSPPCELLID0", "struct___s_s_p__s.html#a4bfdfd6ed98695bb8cdbbed70fc65396", null ],
+    [ "SSPPCELLID1", "struct___s_s_p__s.html#a79cc8a97fcb983c60777f5fc5fca6cd0", null ],
+    [ "SSPPCELLID2", "struct___s_s_p__s.html#a49775c8537a73ef436143375d9eedb9e", null ],
+    [ "SSPPCELLID3", "struct___s_s_p__s.html#ae09553c6688c5ef634913f2f3c1cecb5", null ],
+    [ "SSPPERIPHID0", "struct___s_s_p__s.html#a3c580f7204757df23957c62d79f8c2fc", null ],
+    [ "SSPPERIPHID1", "struct___s_s_p__s.html#aaf08683a4aed5c53013bc01dbe49beff", null ],
+    [ "SSPPERIPHID2", "struct___s_s_p__s.html#a400ffd6444ab5e8350d71eefe4e70654", null ],
+    [ "SSPPERIPHID3", "struct___s_s_p__s.html#ae246f064ca4a14df0ab5d150e685fae6", null ],
+    [ "SSPRIS", "struct___s_s_p__s.html#a34c8566206727e4815980f8f4baa9fd9", null ],
+    [ "SSPSR", "struct___s_s_p__s.html#a87c259065f58ba3cec15b65c9372d161", null ],
+    [ "SSPTCR", "struct___s_s_p__s.html#aed398056f8e0ac947b79de1a649d7d20", null ],
+    [ "SSPTDR", "struct___s_s_p__s.html#aa7328809f69a56d29c2693f9024d8417", null ]
+];

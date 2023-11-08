@@ -9,8 +9,8 @@
 # is used as reference when generating the absolute path information 
 REPO_ROOT_DIR := ../..
 
-# Overwrite help as the first target so that this one is called when no argument is given to GNUmake.
-default: simvision
+# Overwrite help as the first target so that this one is called when no argument is given to GNUmake. simvision
+default: patch
 
 # Toolchain defines the tools used for compiling. 
 # Toolchain can be ARM_GCC, the GNU Compiler or ARMV5, the Keil-ARM compiler
@@ -57,22 +57,9 @@ endif
 # Note: If CCOMPILER_DIRS_FILTER is empty it will be set to SOURCE_DIRS
 CCOMPILER_DIRS_FILTER := \
     ../version/ \
-    $(filter %/, $(wildcard $(REPO_ROOT_DIR)/common/modules/*/)) \
-    $(REPO_ROOT_DIR)/common/utilities/ \
 	$(REPO_ROOT_DIR)/common/system_header/gnu/sys/ \
 	$(REPO_ROOT_DIR)/common/system_header/c_keil/ \
-	$(REPO_ROOT_DIR)/common/modules/configurator/ \
-    $(REPO_ROOT_DIR)/common/modules/driver_common/ \
-    $(REPO_ROOT_DIR)/common/modules/job_agency/ \
-    $(REPO_ROOT_DIR)/common/modules/logger/ \
-    $(REPO_ROOT_DIR)/common/modules/oam/ \
-    $(REPO_ROOT_DIR)/common/modules/otp/ \
-    $(REPO_ROOT_DIR)/common/modules/patcher/ \
-    $(REPO_ROOT_DIR)/common/modules/pmbus/ \
-    $(REPO_ROOT_DIR)/common/modules/regulation/ \
-    $(REPO_ROOT_DIR)/common/modules/rtx/ \
-    $(REPO_ROOT_DIR)/common/modules/startup/ \
-    $(REPO_ROOT_DIR)/common/modules/user_app/
+	$(filter %/, $(wildcard $(REPO_ROOT_DIR)/common/modules/*/))
 
 CCOMPILER_DIRS := $(filter-out $(CCOMPILER_DIRS_FILTER), $(SOURCE_DIRS))
 
@@ -98,6 +85,7 @@ CCODEANALYZER_DIRS := $(filter-out $(CCODEANALYZER_DIRS_FILTER), $(CCOMPILER_DIR
 #PATCH_REF_IMAGE_NAMES := $(REPO_ROOT_DIR)/versions/Shasta.A11.ROM.v4_20180124_124011_rom_image
 #PATCH_REF_IMAGE_NAMES := $(REPO_ROOT_DIR)/projects/rom_image/build/image/image
 #PATCH_REF_IMAGE_NAMES := $(REPO_ROOT_DIR)/projects/rom_image/build/simvision/simvision
+#PATCH_REF_IMAGE_NAMES := $(REPO_ROOT_DIR)/versions/Shasta.A21.ROM.v9_20190309_173226_rom_image
 PATCH_REF_IMAGE_NAMES := $(REPO_ROOT_DIR)/versions/Shasta.A23.ROM.v12_20191118_093946_rom_image
 
 # Reference Image for the patch targets. Not relevant for the image target.
@@ -106,11 +94,18 @@ PATCH_LINK_RANGE_CONFIG_FILE := ./src/partial_patch.cfg
 # In case an entry point is needed by e.g. a debugger
 LINKER_PARAMS += --entry=patch_entry
 
+# Plugin for the targets "simvision"
+include $(REPO_ROOT_DIR)/common/MakefileSimVision.mk
 include $(REPO_ROOT_DIR)/common/MakefilePatching.mk
 
 ifeq ($(TOOLCHAIN), ARM_GCC)
 # Plugin for the targets "patch".
 	include $(REPO_ROOT_DIR)/common/MakefileCommonGCC.mk
+else
+# Plugin for the targets "patch".
+	include $(REPO_ROOT_DIR)/common/MakefileCommonARM.mk
 endif
 # Plugin for pmbus auto generation of c code
 include $(REPO_ROOT_DIR)/common/MakefilePmbus.mk
+# Plugin for pmbus default table c code
+#include $(REPO_ROOT_DIR)/common/MakefilePmbusDefaultArrary.mk

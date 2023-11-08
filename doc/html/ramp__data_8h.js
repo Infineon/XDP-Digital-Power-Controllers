@@ -1,0 +1,27 @@
+var ramp__data_8h =
+[
+    [ "Capture_Buffer_t", "struct_capture___buffer__t.html", "struct_capture___buffer__t" ],
+    [ "Capture_Log_t", "struct_capture___log__t.html", "struct_capture___log__t" ],
+    [ "ramp_data_App_s", "structramp__data___app__s.html", "structramp__data___app__s" ],
+    [ "CAPTURE_HEADER_COUNT_MASK", "ramp__data_8h.html#aadbe6c333cd52558437b8608b20f84b2", null ],
+    [ "CAPTURE_HEADER_COUNT_POS", "ramp__data_8h.html#a5d0193367fef95e08eb0857601e54c7f", null ],
+    [ "CAPTURE_HEADER_LENGTH_MASK", "ramp__data_8h.html#ace53780cbeee46c15f49485ae1283fc9", null ],
+    [ "CAPTURE_HEADER_LENGTH_POS", "ramp__data_8h.html#a7e5927755f1be73453153c04a961f6ad", null ],
+    [ "CAPTURE_HEADER_LOOP_MASK", "ramp__data_8h.html#a7b57fa7481e76e6f9ce6ecf30fd074f6", null ],
+    [ "CAPTURE_HEADER_LOOP_POS", "ramp__data_8h.html#abd01316bf88922dd9385144464894573", null ],
+    [ "CAPTURE_HEADER_TIMESTAMP_MASK", "ramp__data_8h.html#a43db6653e48e6a5a97e72996a16c7805", null ],
+    [ "CAPTURE_HEADER_TIMESTAMP_POS", "ramp__data_8h.html#a6180201dbffdebac9851920d100ce1cc", null ],
+    [ "CAPTURE_LOG_MAX_PAYLOAD", "ramp__data_8h.html#a3d5e2bcd4e8c2381576bca7b57ffd3fe", null ],
+    [ "RAMP_DATA_BUFFER_BASE", "ramp__data_8h.html#ae17387c7eab8b9c1d24c9f08141ac61b", null ],
+    [ "RAMP_DATA_SIZE_IN_BYTES", "ramp__data_8h.html#a48f8586d52da0d80fd53f87ea7cf104f", null ],
+    [ "capture_log_header_create", "ramp__data_8h.html#afbf0d401c26f67234ab9a96277f660cf", null ],
+    [ "capture_log_length_get", "ramp__data_8h.html#a2044cc4a31f726af6905e9d2fb13e4de", null ],
+    [ "capture_log_overwrite_config", "ramp__data_8h.html#a9e2262925865b7e0c1484fab02e9da4d", null ],
+    [ "PMBUS_HANDLE_MFR_RAMP_DATA", "ramp__data_8h.html#a3565c761acc1834933285c6505923735", null ],
+    [ "Ramp_data_buffer_read", "ramp__data_8h.html#a9f49e827c7dc5f2c9647ac615d17abbd", null ],
+    [ "Ramp_data_buffer_reset", "ramp__data_8h.html#a9d6847a9a0668b55ac6d04eca7d80612", null ],
+    [ "Ramp_data_buffer_write", "ramp__data_8h.html#adde1a75666057b91c4867856900f3383", null ],
+    [ "telemetry_Ramp_data_sample", "ramp__data_8h.html#a1996d699742f2c325dff09f72a15c709", null ],
+    [ "user_regulation_state_ton_rise_cb_regulation_controls_enable", "ramp__data_8h.html#a4b26bf6778b51390ffbdc44f45743aad", null ],
+    [ "ramp_data_App", "ramp__data_8h.html#a8390cabb4b242568e10837c760d05d95", null ]
+];
