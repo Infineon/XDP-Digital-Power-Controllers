@@ -2,9 +2,19 @@
 /*
  * pmbus_patch_configuration_data.h
  *
- *  Created on: 21 Jul 2022
- *      Author: seetweireniv
+ ** Created on:  2024-02-19
  */
+ /* ============================================================================
+** Copyright (C) 2024 Infineon Technologies AG
+** All rights reserved.
+** ============================================================================
+**
+** ============================================================================
+** This document contains proprietary information of Infineon Technologies AG.
+** Passing on and copying of this document, and communication of its contents
+** is not permitted without Infineon's prior written authorisation.
+** ============================================================================
+*/
 
 #ifndef SRC_USER_APP_PMBUS_PATCH_CONFIGURATION_DATA_H_
 #define SRC_USER_APP_PMBUS_PATCH_CONFIGURATION_DATA_H_

@@ -28,7 +28,7 @@ if exist %PYTHON_INSTALL_DIR%\lib\site-packages\openpyxl-2.5.1-py2.7.egg-info (
 %PYTHON_INSTALL_DIR%\Scripts\pip install intelhex==1.5
 %PYTHON_INSTALL_DIR%\Scripts\pip install openpyxl==2.5.1
 %PYTHON_INSTALL_DIR%\Scripts\pip install pyelftools==0.23
-::%PYTHON_INSTALL_DIR%\Scripts\pip install xlrd==1.2.0
-::%PYTHON_INSTALL_DIR%\Scripts\pip install pandas==0.24.2
+%PYTHON_INSTALL_DIR%\Scripts\pip install xlrd==1.2.0
+%PYTHON_INSTALL_DIR%\Scripts\pip install pandas==0.24.2
 
 )

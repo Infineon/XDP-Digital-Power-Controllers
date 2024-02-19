@@ -1,9 +1,19 @@
 /*
  * pmbus_patch_configuration_data.c
  *
- *  Created on: Aug 30, 2017 with python
- *      Author: ashendar
+  ** Created on:  2024-02-19
  */
+ /* ============================================================================
+** Copyright (C) 2024 Infineon Technologies AG
+** All rights reserved.
+** ============================================================================
+**
+** ============================================================================
+** This document contains proprietary information of Infineon Technologies AG.
+** Passing on and copying of this document, and communication of its contents
+** is not permitted without Infineon's prior written authorisation.
+** ============================================================================
+*/
 
 #include "driver_common.h"       // scratchpad memory
 /* Standard library */
@@ -37,7 +47,7 @@ const uint8_t patch_pmbus_default_data_array_loop0[] = {
 		199,
 		171,
 		238,
-		249,
+		246,
 		1,
 		0,
 		0,
@@ -155,8 +165,6 @@ const uint8_t patch_pmbus_default_data_array_loop0[] = {
 		255,
 		19,
 		51,
-		0,
-		0,
 		0,
 		0,
 		0,
@@ -469,10 +477,12 @@ const uint8_t patch_pmbus_default_data_array_loop0[] = {
 		0,
 		0,
 		0,
-		71,
-		27,
-		182,
-		136,
+		0,
+		0,
+		202,
+		6,
+		72,
+		26,
 
         };
         
@@ -491,7 +501,7 @@ const uint8_t patch_pmbus_default_data_array_loop1[] = {
 		213,
 		33,
 		251,
-		249,
+		246,
 		1,
 		0,
 		0,
@@ -609,8 +619,6 @@ const uint8_t patch_pmbus_default_data_array_loop1[] = {
 		255,
 		19,
 		51,
-		0,
-		0,
 		0,
 		0,
 		0,
@@ -923,10 +931,12 @@ const uint8_t patch_pmbus_default_data_array_loop1[] = {
 		0,
 		0,
 		0,
-		71,
-		27,
-		182,
-		136,
+		0,
+		0,
+		202,
+		6,
+		72,
+		26,
 
         };
         

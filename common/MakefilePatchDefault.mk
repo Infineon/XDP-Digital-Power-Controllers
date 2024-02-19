@@ -18,7 +18,8 @@ patching_help:
 BUILD_TYPE = test-patch
 PROJECT_FILE:= project_name.txt
 test = $(if $(filter $(OS),Windows),type,cat)
-PROJECT_NAME=$(shell $(test) $(PROJECT_FILE))
+#PROJECT_NAME=$(shell $(test) $(PROJECT_FILE))
+PROJECT_NAME= --project=patch_empty_app
 PATCH_VERSION = --versionoption=1
 PATCH_ZIP = --zipoption=0
 patching:

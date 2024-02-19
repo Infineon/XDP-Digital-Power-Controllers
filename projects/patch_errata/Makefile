@@ -10,7 +10,7 @@
 REPO_ROOT_DIR := ../..
 
 # Overwrite help as the first target so that this one is called when no argument is given to GNUmake.
-default: simvision
+default: patch
 
 # Toolchain defines the tools used for compiling. 
 # Toolchain can be ARM_GCC, the GNU Compiler or ARMV5, the Keil-ARM compiler

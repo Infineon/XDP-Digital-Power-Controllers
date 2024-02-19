@@ -295,7 +295,8 @@ def command_test_patch_version(args):
     if versionoption == '0':
         change_filename = "%s/versions/change_%s.diff" % (project_dir, strftime("%Y%m%d_%H%M%S", localtime(utc_time))) 
     elif versionoption == '1':
-        change_filename = "%s/versions/change_0x%08X.diff" % (project_dir, utc_time) 
+        change_filename = "%s/versions/change_%s_0x%08X.diff" % (project_dir, strftime("%Y%m%d_%H%M%S", localtime(utc_time)),utc_time) 
+        # change_filename = "%s/versions/change_0x%08X.diff" % (project_dir, utc_time) 
 
     config_filename = "%s/src/partial_patch.cfg" % project_dir
     config_file=configfile.ConfigFile(config_filename)
@@ -366,11 +367,13 @@ def command_test_patch_version(args):
     if versionoption == '0':
         target_excel = "%s/versions/shasta_pmbus_%s.xlsx" % (project_dir, strftime("%Y%m%d_%H%M%S", localtime(utc_time))) 
     elif versionoption == '1':
-        target_excel = "%s/versions/shasta_pmbus_0x%08X.xlsx" % (project_dir, utc_time)
+        target_excel = "%s/versions/shasta_pmbus_%s_0x%08X.xlsx" % (project_dir, strftime("%Y%m%d_%H%M%S", localtime(utc_time)),utc_time)
+        # target_excel = "%s/versions/shasta_pmbus_0x%08X.xlsx" % (project_dir, utc_time)
     shutil.copy(excel_files[0], target_excel) 
     
     bin_prefix = "%s_%s" % (project, strftime("%Y%m%d_%H%M%S", localtime(utc_time)))
-    bin_prefix_2 = "%s_0x%08X" % (project, utc_time)
+    bin_prefix_2 = "%s_%s_0x%08X" % (project, strftime("%Y%m%d_%H%M%S", localtime(utc_time)), utc_time)
+    # bin_prefix_2 = "%s_0x%08X" % (project, utc_time)
     bin_files = glob.glob(os.path.join("%s/*/*" % project_dir, "*.bin"))
     if len(bin_files) > 1:
         raise GitProjectException ("Multiple 'bin' files are found in project '%s': %s" %(project_dir, ",".join(bin_files)))

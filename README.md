@@ -1,5 +1,11 @@
 # XDPP1100 Firmware Development Environment
 
+<a href="https://www.infineon.com">
+<img src="./assets/images/Logo.svg" align="right" alt="Infineon logo">
+</a>
+
+<p>Infineon GitHub repository for XDPP1100.</p>
+
 ## Instruction 
 - Install Python version 2.7.18 in PC
 - Install Eclipse IDE version above neon 3

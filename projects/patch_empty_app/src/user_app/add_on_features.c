@@ -31,13 +31,17 @@
 #include "shasta_hal_vcontrol.h"
 #include "pmbus_autogen.h"
 #include "pmbus_mfr_autogen.h"
+#include <math.h>
 
 
 void add_on_features_init (void)
 {
-	//uint8_t test = 1;
+	float test;
+	test = pow(2,3);
+	PMBUS_Set_Command_Dword (PMBUS_PAGE_WB_0,PMBUS_CMDCODE_MFR_EXAMPLE,test);
 
 }
+
 #ifdef pmbus_memory_error
 /**
  * Copy from NVM or buffer to pmbus data storage.
