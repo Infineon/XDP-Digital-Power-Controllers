@@ -132,9 +132,11 @@ def system_execute(cmd_arg, cwd = None):
 
 #git root directory
 try:
-    git_root_directory = system_execute_return(['git', 'rev-parse', '--show-toplevel']).strip('\ \t\r\n')
+    # git_root_directory = system_execute_return(['git', 'rev-parse', '--show-toplevel']).strip('\ \t\r\n')
+    current_directory = os.getcwd()
+    git_root_directory = os.path.abspath(os.path.join(current_directory, os.pardir, os.pardir))
 except:
-    print 'ERROR: GIT call inside the repository failed'
+    print 'ERROR: call inside the repository failed'
     exit(2)
 
 #specify the configuration file
@@ -292,10 +294,10 @@ def command_test_patch_version(args):
     #git_development_version_set(product, version)
 
     # Update the UTC timestamp of the new version in the partial patch configuration file
-    if versionoption == '0':
-        change_filename = "%s/versions/change_%s.diff" % (project_dir, strftime("%Y%m%d_%H%M%S", localtime(utc_time))) 
-    elif versionoption == '1':
-        change_filename = "%s/versions/change_%s_0x%08X.diff" % (project_dir, strftime("%Y%m%d_%H%M%S", localtime(utc_time)),utc_time) 
+    # if versionoption == '0':
+    #     change_filename = "%s/versions/change_%s.diff" % (project_dir, strftime("%Y%m%d_%H%M%S", localtime(utc_time))) 
+    # elif versionoption == '1':
+    #     change_filename = "%s/versions/change_%s_0x%08X.diff" % (project_dir, strftime("%Y%m%d_%H%M%S", localtime(utc_time)),utc_time) 
         # change_filename = "%s/versions/change_0x%08X.diff" % (project_dir, utc_time) 
 
     config_filename = "%s/src/partial_patch.cfg" % project_dir
@@ -317,7 +319,7 @@ def command_test_patch_version(args):
     
     config_file.set("Version", "NewVersion", "0x%08X" % utc_time)
     config_file.write_file()
-    system_execute(['git', 'diff', '>',change_filename])
+    # system_execute(['git', 'diff', '>',change_filename]) # remove change file done by git
     
     # update patch_init.c with the latest utc version number
     patch_init_filename = "%s/src/patch_init.c" % project_dir
