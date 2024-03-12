@@ -61,6 +61,6 @@ void patch_entry(void)
     memcpy(SECTION_BASE_RAM_EXEC_DESTINATION, SECTION_BASE_RAM_EXEC_SOURCE, SECTION_LENGTH_RAM_EXEC);
 
 
-    SCU_SPARE_FF__SET(0x65049625UL);    // write the patch id to SCU spare for simple test that patch loaded
+    SCU_SPARE_FF__SET(0x6580F6F9UL);   // write the patch id to SCU spare for simple test that patch loaded
     user_drv_init();
 }

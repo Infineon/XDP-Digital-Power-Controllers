@@ -35,7 +35,7 @@
 		<link>
 			<name>common</name>
 			<type>2</type>
-			<locationURI>copy_PARENT12/common</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/common</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>
