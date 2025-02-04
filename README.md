@@ -7,12 +7,12 @@
 <p>Infineon GitHub repository for XDPP1100.</p>
 
 ## Instruction 
-- Install Python version 2.7.18 in PC
+- Install Python version 3.11 in PC
 - Install Eclipse IDE version above neon 3
 - Install Java Runtime accordingly to requirement of Eclipse IDE
 - Edit user_env.bat "PYTHON_INSTALL_DIR","ECLIPSE_DIR" and "JAVAHOME" to the store location of your specific PC
 - Example: 
-  - set PYTHON_INSTALL_DIR=c:\Python2_7
+  - set PYTHON_INSTALL_DIR=c:\Python3_11
   - set ECLIPSE_DIR=C:\eclipse\eclipse
   - set JAVAHOME="C:\Program Files (x86)\Common Files\Oracle\Java\javapath"
 
