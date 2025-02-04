@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 USAGE = '''
 Usage:
    python git_projects.py [command] [command options]
@@ -11,14 +13,27 @@ Note: This script is changing the current working branch while the script runs.
       Ensure that you do not have uncommitted work inside your GIT clone!
 
 Commands:
-test-patch      Compile patch version without commit to repo.
+test-patch    Create a new development patch version for the given product.
+
+                 Copies and renames the compile output '*.elf' and 'patch.sym' files
+                 to the git repository root directory '/versions'. The new name
+                 follows the git version tag format. These files are later used
+                 as reference for patches.
+
+                 The script cleans up the local repository (e.g. remove
+                 untracked file and local changes). It then call 'git pull' on
+                 the product specific 'development' branch, to
+                 synchronize to the latest GERRIT HEAD.
+
                  Parameter:
                  --project=<project-name>    Firmware project name under the
                                              "/projects" sub-directory, where to
-                                             generate the version.\
+                                             generate the version.
+
                  --versionoption=<0 or 1>    "0" append localtime version number to bin file
                                              "1" append utc version number to bin file
                  --zipoption=<0 or 1>        "1" zip the src folder.
+
 
 Options:
 
@@ -54,6 +69,10 @@ utc_time = int(time())
 ###################################################################################################
 #Global Definitions
 ###################################################################################################
+# version.h file location, related to the GIT root directory
+version_h_location = 'projects/version/version.h'
+# version.c file location, related to the GIT root directory
+version_c_location = 'projects/version/version.c'
 # ReleaseNotes.txt file location, related to the GIT root directory
 release_notes_location = 'ReleaseNotes.txt'
 
@@ -70,7 +89,7 @@ def print_verbose(text):
     Printout debug information in case verbose printout is enabled as command line option
     '''
     if b_verbose_printout is True:
-        print (text)
+        print(text)
 ###################################################################################################
 
 class GitProjectException(Exception):
@@ -103,7 +122,7 @@ def system_execute_return(cmd_arg, cwd = None):
 
     try:
         print_verbose('System Command Execute: "%s"' % ' '.join(cmd_arg))
-        retvalue = subprocess.check_output(cmd_arg, cwd = cwd, shell = shell)
+        retvalue = subprocess.check_output(cmd_arg, cwd = cwd, shell = shell, encoding="utf8")
     except:
         raise OSError('Command Execution failed: "%s"' % ' '.join(cmd_arg))
     else:
@@ -132,15 +151,14 @@ def system_execute(cmd_arg, cwd = None):
 
 #git root directory
 try:
-    # git_root_directory = system_execute_return(['git', 'rev-parse', '--show-toplevel']).strip('\ \t\r\n')
-    current_directory = os.getcwd()
-    git_root_directory = os.path.abspath(os.path.join(current_directory, os.pardir, os.pardir))
+    git_root_directory = system_execute_return(['git', 'rev-parse', '--show-toplevel']).strip('\ \t\r\n')
 except:
-    print 'ERROR: call inside the repository failed'
+    print('ERROR: GIT call inside the repository failed')
     exit(2)
 
 #specify the configuration file
 configuration_file = git_root_directory + '/git_projects.cfg'
+
 ###################################################################################################
 # Local Class Declarations
 ###################################################################################################
@@ -183,7 +201,6 @@ def ReleaseNote_update_test(utc, proj_name):
     Updates and adds a new header at the top of the release note file.
     This file is located in the GIT root directory.
 
-    Parameter "version" specified the version number.
     Parameter "utc" specified an 32-bit UTC integer timestamp.
     Parameter "proj_name" specified the project name.
     '''
@@ -193,7 +210,7 @@ def ReleaseNote_update_test(utc, proj_name):
     #     git_email = system_except_return_value(['git', 'config', '--get', 'user.email']).strip('\ \t\r\n')
     # except:
     #     git_email = git_user = ''
-    #     print 'WARNING: Could not read the "git" repo user parameter. Ensure that you configure the user parameter, otherwise the revision information in GIT do not contain valid user information.'
+    #     print('WARNING: Could not read the "git" repo user parameter. Ensure that you configure the user parameter, otherwise the revision information in GIT do not contain valid user information.')
     #     pass
 
     try:
@@ -220,29 +237,186 @@ def ReleaseNote_update_test(utc, proj_name):
     new_content.append('===============================================================================\n')
 
     project_dir = '%s/projects/%s' % (git_root_directory, proj_name)
-
     path = project_dir + '/' + release_notes_location
     isExist = os.path.exists(path)
     if not isExist:
         open(path,'w')
 
     #read the current content of the version information source code file
+    # if git_root_directory not in release_notes_location:
+    #     f = text_file(git_root_directory + '/' + release_notes_location)
+    # else:
+    #     f = text_file(release_notes_location)
     f = text_file(project_dir + '/' + release_notes_location)
 
     #write the modified/updated content back to the source code file
     new_content += f.file_read()
     f.file_write(new_content)
 
-def zip_test_generate(zip_path, ver_name, proj_name):
+def zip_distribution_generate(product, version, utc, proj_name):
     '''
     generate the target ZIP file name out of the project-, version, and timestamp-
     information
     '''
-    zip_file_name = "%s/%s.zip" % (zip_path,ver_name)
+    zip_file_name = "%s.development_v%d_%s.zip" % (product, version, strftime("%Y%m%d_%H%M%S", localtime(utc)))
     zip_list = ["zip", "-r", zip_file_name]
-    zip_list += ['projects/%s/src' % proj_name]
+    zip_list += [release_notes_location, version_h_location, version_c_location, 'common', 'projects/%s' % proj_name]
+    #add generate "ReleaseNotes.txt" file to the next GIT commit
+    system_execute(['git', 'add', release_notes_location])
+
     system_execute(zip_list)
 
+###################################################################################################
+# git repo commands
+###################################################################################################
+
+def git_version_tag_get(product, branch, version):
+    '''
+    returns the GIT tag for a dedicated product, branch and version.
+    '''
+    for tag in system_execute_return(['git', 'tag']).splitlines(False):
+        if re.search('%s\.%s_v%d' % (product, branch, version), tag) != None:
+            return tag
+    return None
+
+
+def git_development_version_get(product):
+    '''
+    Reads the 'git_projects.cfg' configuration file inside the git root directory.
+    It returns the current development version number that was placed inside the configuration file.
+
+    Return version #1 in case no configuration file could be found.
+    '''
+    try:
+        tree = ET.parse(configuration_file)
+    except:
+        print_verbose("Could not read '%s'" % configuration_file)
+        return 0
+
+    tree = ET.parse(configuration_file)
+    for child in tree.getroot().findall("./distribution[@type='development']"):
+        if child.get('product') != product:
+            raise GitProjectException( "configuration file '%s' does not contain valid \"<root>/<distribution product=\"%s\">\" attribute." % (configuration_file, product))
+        return int(child.get('version'), 10)
+
+    raise GitProjectException( "No valid 'development' version info found in '%s'" %configuration_file)
+
+def git_test_version_get(product):
+    '''
+    Reads the 'git_projects.cfg' configuration file inside the git root directory.
+    It returns the current development version number that was placed inside the configuration file.
+
+    Return version #1 in case no configuration file could be found.
+    '''
+    try:
+        tree = ET.parse(configuration_file)
+    except:
+        print_verbose("Could not read '%s'" % configuration_file)
+        return 0
+
+    tree = ET.parse(configuration_file)
+    for child in tree.getroot().findall("./distribution[@type='development']"):
+        return int(child.get('version'), 10)
+
+    raise GitProjectException( "No valid 'development' version info found in '%s'" %configuration_file)
+
+
+
+def git_development_version_set(product, version):
+    '''
+    Updates the current development version number in the 'git_projects.cfg' configuration file,
+    which is located in the git root directory.
+    '''
+    try:
+        tree = ET.parse(configuration_file)
+    except:
+        print_verbose("Could not read and update'%s'. Create a new file instance" % configuration_file)
+        root = ET.fromstring('<root><distribution product=\"%s\" type=\"development\" version=\"1\"/></root>' % product)
+        tree = ET.ElementTree(root)
+
+    for child in tree.findall("./distribution[@type='development']"):
+        child.set('version', str(version))
+        try:
+            tree.write(configuration_file)
+        except:
+            raise GitProjectException("Could not write '%s'" % configuration_file)
+        return
+
+
+def git_release_version_get(product):
+    '''
+    retrieves all GIT tags and filters out the correct latest version tag.
+    The number of the version found version is returned.
+
+    This routine checks if there is no "release" version for the latest
+    development version.
+
+    It returns '0' in case no valid version tag is found.
+    '''
+    version = git_development_version_get(product)
+
+    tag = git_version_tag_get(product, 'release', version)
+
+    if tag is not None:
+        raise GitProjectException('GIT repository contains already release tag "%s" for product "%s", version "%s"' % (tag, product, version))
+
+    if version == 0:
+        raise GitProjectException('GIT repository does not contain any "development" to be released')
+
+    return version
+
+
+def check_if_branch_exist(branch):
+    '''Raise an exception if the given branch name does not exist on the repo.'''
+    branch_exist = False
+    for i in system_execute_return(['git', 'branch', '-a']).splitlines(False):
+        if branch in i:
+            branch_exist = True
+    if branch_exist is False:
+        raise GitProjectException('Given branch name "%s" does not exist in the GIT repository' % branch)
+
+
+def get_current_branch():
+    '''Return the current branch name'''
+    for line in system_execute_return(['git', 'branch', '-a']).splitlines(False):
+        m = re.match(r'\* +([^\ \r\n\t]+)', line)
+        if m:
+            return m.group(1)
+    raise GitProjectException('You currently not attached to any GIT branch')
+
+
+def check_current_branch(branch):
+    '''Check if the current branch is the given branch'''
+    check_if_branch_exist(branch)
+    current_branch = get_current_branch()
+
+    if branch != current_branch:
+        raise GitProjectException('Current checked out branch \"%s\", but for the given product and command you should have checked out branch \"%s\"' % (current_branch, branch))
+
+
+def get_project_from_branch(branch_name):
+    '''
+    Extract the project name from the given branch name.
+    The branch name convention: "project/<product_name>.development"
+    '''
+    rx = re.compile('^projects\/|\.development|\_development$')
+    return rx.sub('', branch_name)
+
+
+def git_repo_config():
+    '''
+    Adapt the local repo configuration for our version management tasks.
+
+    It configures the repo to be file mode agnostic.
+    '''
+    print_verbose('Adapt GIT repository configuration to ensure that file modes are ignored during the merge')
+    system_execute(['git', 'config', '--local', 'core.fileMode', 'false'])
+
+###################################################################################################
+
+###################################################################################################
+# Program Commands
+###################################################################################################
 def command_test_patch_version(args):
     #Evaluate command line arguments
     product = None
@@ -251,6 +425,8 @@ def command_test_patch_version(args):
 
     zipoption = '0'
     versionoption = '0'
+
+    # opts, args = getopt.getopt(args, 'j', ['project=', 'skip-pull-cleanup'])
     opts, args = getopt.getopt(args, 'j', ['project=', 'skip-pull-cleanup','versionoption=','zipoption=' ])
     for o, a in opts:
         if o in ('-j'):
@@ -264,7 +440,7 @@ def command_test_patch_version(args):
 
     if project is None:
         raise getopt.GetoptError('Command "version" requires "--project" parameter')
-    
+
     project_dir = '%s/projects/%s' % (git_root_directory, project)
 
     # create versions folder in source project
@@ -272,7 +448,7 @@ def command_test_patch_version(args):
     isExist = os.path.exists(bin_path)
     if not isExist:
         os.makedirs(bin_path)
-        
+
     #merging from 'development' to 'testing' branch requires:
     # - Go to source branch
     # - Update version information in "ReleaseNotes.txt"
@@ -287,19 +463,17 @@ def command_test_patch_version(args):
     # - Commit the merge and generate the version tag
 
     #update version information in "ReleaseNotes.txt"
-    #version = git_development_version_get(product) + 1
     ReleaseNote_update_test(utc_time, project)
 
     #update the 'git_projects.cfg' configuration file
     #git_development_version_set(product, version)
 
-    # Update the UTC timestamp of the new version in the partial patch configuration file
-    # if versionoption == '0':
-    #     change_filename = "%s/versions/change_%s.diff" % (project_dir, strftime("%Y%m%d_%H%M%S", localtime(utc_time))) 
-    # elif versionoption == '1':
-    #     change_filename = "%s/versions/change_%s_0x%08X.diff" % (project_dir, strftime("%Y%m%d_%H%M%S", localtime(utc_time)),utc_time) 
-        # change_filename = "%s/versions/change_0x%08X.diff" % (project_dir, utc_time) 
+    if versionoption == '0':
+        change_filename = "%s/versions/change_%s.diff" % (project_dir, strftime("%Y%m%d_%H%M%S", localtime(utc_time))) 
+    elif versionoption == '1':
+        change_filename = "%s/versions/change_%s_0x%08X.diff" % (project_dir, strftime("%Y%m%d_%H%M%S", localtime(utc_time)),utc_time) 
 
+    # Update the UTC timestamp of the new version in the partial patch configuration file
     config_filename = "%s/src/partial_patch.cfg" % project_dir
     config_file=configfile.ConfigFile(config_filename)
 
@@ -316,20 +490,17 @@ def command_test_patch_version(args):
         else:
             print("String not found in file.")
 
-    
     config_file.set("Version", "NewVersion", "0x%08X" % utc_time)
     config_file.write_file()
-    # system_execute(['git', 'diff', '>',change_filename]) # remove change file done by git
-    
+
     # update patch_init.c with the latest utc version number
     patch_init_filename = "%s/src/patch_init.c" % project_dir
     search_version = "SCU_SPARE_FF__SET(" + patchversion +"UL);"
     replace_version = "SCU_SPARE_FF__SET(0x%08XUL); " % utc_time
-    
+
     # Opening our patch_init.c file in read only
     # mode using the open() function
     with open(patch_init_filename, 'r') as file:
-      
         # Reading the content of the file
         # using the read() function and storing
         # them in a new variable
@@ -341,10 +512,11 @@ def command_test_patch_version(args):
     # Opening our atch_init.c in write only
     # mode to write the replaced content
     with open(patch_init_filename, 'w') as file:
-      
         # Writing the replaced data in our
         # text file
-        file.write(data)  
+        file.write(data) 
+
+    system_execute(['git', 'diff', '>',change_filename])
 
     #clean the target image
     print_verbose('Compile target project')
@@ -353,8 +525,7 @@ def command_test_patch_version(args):
 
     #compile the target image
     print_verbose('Compile target project')
-    #make_cmd = ['make', 'patch', 'TOOLCHAIN=ARM_GCC', '-C', project_dir]
-    make_cmd = ['make', '-C', project_dir]
+    make_cmd = ['make', '-C', project_dir, 'patch']
     if make_multi_jobs is True:
         make_cmd.append('-j')
     system_execute(make_cmd)
@@ -362,7 +533,7 @@ def command_test_patch_version(args):
     # Copy the generated "patch*.sym" and "*.elf" to the "/versions" directory below the GIT root directory.
     # Rename the target file to the GIT version tag
     import shutil, glob
-    
+
     excel_files = glob.glob(os.path.join("%s/src" % project_dir, "*.xlsx"))
     if len(excel_files) > 1:
         raise GitProjectException ("Multiple 'excel' files are found in project '%s': %s" %(project_dir, ",".join(excel_files)))
@@ -371,8 +542,8 @@ def command_test_patch_version(args):
     elif versionoption == '1':
         target_excel = "%s/versions/shasta_pmbus_%s_0x%08X.xlsx" % (project_dir, strftime("%Y%m%d_%H%M%S", localtime(utc_time)),utc_time)
         # target_excel = "%s/versions/shasta_pmbus_0x%08X.xlsx" % (project_dir, utc_time)
-    shutil.copy(excel_files[0], target_excel) 
-    
+    shutil.copy(excel_files[0], target_excel)  
+
     bin_prefix = "%s_%s" % (project, strftime("%Y%m%d_%H%M%S", localtime(utc_time)))
     bin_prefix_2 = "%s_%s_0x%08X" % (project, strftime("%Y%m%d_%H%M%S", localtime(utc_time)), utc_time)
     # bin_prefix_2 = "%s_0x%08X" % (project, utc_time)
@@ -385,10 +556,6 @@ def command_test_patch_version(args):
     elif versionoption == '1':
         target_file = "%s/%s.bin" % (bin_path, bin_prefix_2)
     shutil.copy(bin_files[0], target_file) 
-        
-    if zipoption == '1':
-        #generate ZIP package
-        zip_test_generate(bin_path, bin_prefix, project)
 
 ###################################################################################################
 
@@ -415,7 +582,7 @@ def main():
                 return command_test_patch_version(cmd_args[1:])
     except GitProjectException as msg:
         print('ERROR: '+str(msg))
-    except getopt.GetoptError, msg:
+    except getopt.GetoptError as msg:
         print('ERROR: '+str(msg))
     except OSError as msg:
         print('ERROR: '+str(msg))
@@ -429,3 +596,4 @@ def main():
 # Make this file executable as a script.
 if __name__ == '__main__':
     sys.exit(main())
+###################################################################################################

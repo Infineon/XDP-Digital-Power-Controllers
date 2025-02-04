@@ -16,19 +16,8 @@ if not defined PYTHON_INSTALL_DIR (echo Pls set env variable PYTHON_INSTALL_DIR 
 :: tools and their shell scripts do this, too ...
 @if not exist "%HOME%" @set HOME=%HOMEDRIVE%%HOMEPATH%
 
+:: Start python venv
+cd tools\python\
+CALL start_venv_for_windows.bat
+cd ..\..
 
-if exist %PYTHON_INSTALL_DIR%\lib\site-packages\openpyxl-2.5.1-py2.7.egg-info (
-    rem file exists
-	echo python appears to have required modules, skipping install
-) else (
-    rem file doesn't exist
-
-:: If no proxy issues the user can use pip to install the packages with dependencies uncomment this and comment out everything else below this in the script
-%PYTHON_INSTALL_DIR%\Scripts\pip install configparser==3.5.0
-%PYTHON_INSTALL_DIR%\Scripts\pip install intelhex==1.5
-%PYTHON_INSTALL_DIR%\Scripts\pip install openpyxl==2.5.1
-%PYTHON_INSTALL_DIR%\Scripts\pip install pyelftools==0.23
-%PYTHON_INSTALL_DIR%\Scripts\pip install xlrd==1.2.0
-%PYTHON_INSTALL_DIR%\Scripts\pip install pandas==0.24.2
-
-)

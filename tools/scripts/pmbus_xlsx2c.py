@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 
 import sys
-import string
+# import string
 import os
 import datetime
 import re
 
 sheet_name = 'Shasta'
-field_list = ['Opcode','Command','Wr. Tx','Rd. Tx','#B','MFR','Loop 0\nSupport','range/res','reset','OTP\nnbits','OTP\nstore','Loop 1\nSupport','range/res','reset','OTP\nnbits','OTP\nstore','Reg\nstore','Reg\nnbits','cmd\nnBytes','Notes','FM-PMBUS-CMD','Coverage Loop 0','Coverage Loop 1','Has read storage']
+field_list = ['Opcode', 'Command', 'Wr. Tx', 'Rd. Tx', '#B', 'MFR', 'Loop 0\nSupport', 'range/res', 'reset', 'OTP\nnbits', 'OTP\nstore', 'Loop 1\nSupport', 'range/res', 'reset', 'OTP\nnbits', 'OTP\nstore', 'Reg\nstore', 'Reg\nnbits', 'cmd\nnBytes', 'Notes', 'FM-PMBUS-CMD', 'Coverage Loop 0', 'Coverage Loop 1', 'Has read storage']
 
 f = {}
 # Fixed position
@@ -49,55 +49,57 @@ def xlsx_parse(file_name):
     from openpyxl import load_workbook
     wb = load_workbook(filename=file_name, read_only=True)
     try:
-		snb = wb.sheetnames
-		print snb
+        snb = wb.sheetnames
+        print(snb)
 
     except:
-		print """Couln't open file: %s\n""" % (file_name)
-		sys.exit(-1)
+        print("""Couln't open file: %s\n""" % file_name)
+        sys.exit(-1)
 
     for sn in snb:
-		if sn==sheet_name:
-			ws = wb[sn]
-			for row in ws.iter_rows(row_offset=1):
-				try:
-					cmd_name = row[f['Command']].value.rstrip()
-					if (cmd_name!='') :
-						command.append(cmd_name)
-						opcode.append(row[f['Opcode']].value)
-						write_tx.append(row[f['Wr. Tx']].value)
-						read_tx.append(row[f['Rd. Tx']].value)
-                                                write_tx_int.append(0)
-                                                read_tx_int.append(0)
-						num_bytes.append(row[f['#B']].value)
-						mfr_string.append(row[f['MFR']].value)
-						loop0_supported.append(row[f['Loop 0\nSupport']].value)
-						loop1_supported.append(row[f['Loop 1\nSupport']].value)
-						range_res.append(row[f['range/res']].value)
-						resetval.append(row[f['reset']].value)
-						common_storage.append(row[f['common storage']].value)
-                                                has_handle.append(row[f['HAS FW HANDLE']].value)
-                                                otp_store.append(row[f['OTP nbits']].value)
-						if verbose>0:
-							print "%s" % (cmd_name)
-				except:
-					print "parsing found end of valid data"
-					return
+        if sn == sheet_name:
+            ws = wb[sn]
+            for row in ws.iter_rows(): #newer version: eg. min_row=1, max_row=1 .eg.
+                try:
+                    cmd_name = row[f['Command']].value.rstrip()
+                    if cmd_name != '':
+                        command.append(cmd_name)
+                        opcode.append(row[f['Opcode']].value)
+                        write_tx.append(row[f['Wr. Tx']].value)
+                        read_tx.append(row[f['Rd. Tx']].value)
+                        write_tx_int.append(0)
+                        read_tx_int.append(0)
+                        num_bytes.append(row[f['#B']].value)
+                        mfr_string.append(row[f['MFR']].value)
+                        loop0_supported.append(row[f['Loop 0\nSupport']].value)
+                        loop1_supported.append(row[f['Loop 1\nSupport']].value)
+                        range_res.append(row[f['range/res']].value)
+                        resetval.append(row[f['reset']].value)
+                        common_storage.append(row[f['common storage']].value)
+                        has_handle.append(row[f['HAS FW HANDLE']].value)
+                        otp_store.append(row[f['OTP nbits']].value)
+                        if verbose > 0:
+                            print("%s" % cmd_name)
+                except:
+                    print("parsing found end of valid data")
+                    return
+
 
 def syntax():
-	print 'Usage:'
-	print '  %s <xlsx*_file> <h_filename> <c_filename> <mfr_h_filename> <mfr_c_filename>' % (sys.argv[0])
+    print('Usage:')
+    print('  %s <xlsx*_file> <h_filename> <c_filename> <mfr_h_filename> <mfr_c_filename>' % (sys.argv[0]))
+
 
 def twos_comp(val, bits):
     """compute the 2's compliment of int value val"""
-    if (val & (1 << (bits - 1))) != 0: # if sign bit is set e.g., 8bit: 128-255
-        val = val - (1 << bits)        # compute negative value
-    return val                         # return positive value as is
+    if (val & (1 << (bits - 1))) != 0:  # if sign bit is set e.g., 8bit: 128-255
+        val = val - (1 << bits)         # compute negative value
+    return val                          # return positive value as is
 
         
 if len(sys.argv) != 6:
-	syntax()
-	sys.exit(-1)
+    syntax()
+    sys.exit(-1)
 
 
 lint_exclude = '''//lint -e{778} suppress "Constant expression evaluates to 0 in operation '&'" '''
@@ -155,83 +157,83 @@ header = '''
 
 typedef enum PMBUS_PAGE_e
 {
-	PMBUS_PAGE_0 = 0u,
-	PMBUS_PAGE_1 = 1u
+    PMBUS_PAGE_0 = 0u,
+    PMBUS_PAGE_1 = 1u
 } PMBUS_PAGE_t;
 
 typedef enum PMBUS_PAGE_W_BROADCAST_e
 {
-	PMBUS_PAGE_WB_0 = 0u,
-	PMBUS_PAGE_WB_1 = 1u,
-	PMBUS_PAGE_WB_BROADCAST = 255u
+    PMBUS_PAGE_WB_0 = 0u,
+    PMBUS_PAGE_WB_1 = 1u,
+    PMBUS_PAGE_WB_BROADCAST = 255u
 } PMBUS_PAGE_W_BROADCAST_t;
 
 // Direction enumeration:
 typedef enum  _PMBUS_DIRECTION_e {
-	PMBUS_WRITE	= 0u, //!< Used for pmbus bus level indications of write
-	PMBUS_READ	= 1u, //!< Used for pmbus bus level indications of read
-	PMBUS_PEEK	= 2u, //!< Used for internal firmware indications of read
-	PMBUS_POKE	= 3u, //!< Used for internal firmware indications of write
-	OTP_RESTORE	= 4u,  //!< Used for otp restore of pmbus commands
-	PMBUS_VIN_OFF	= 5u  //!< Used for telem irq below vin off for shutdown
+    PMBUS_WRITE	= 0u, //!< Used for pmbus bus level indications of write
+    PMBUS_READ	= 1u, //!< Used for pmbus bus level indications of read
+    PMBUS_PEEK	= 2u, //!< Used for internal firmware indications of read
+    PMBUS_POKE	= 3u, //!< Used for internal firmware indications of write
+    OTP_RESTORE	= 4u,  //!< Used for otp restore of pmbus commands
+    PMBUS_VIN_OFF	= 5u  //!< Used for telem irq below vin off for shutdown
 } PMBUS_DIRECTION_e;
 
 enum PMBUS_RANGE_TYPES
 {
-	PMBUS_RANGE_NONE,
-	PMBUS_RANGE_ALL,
-	PMBUS_RANGE_LINEAR11_SIGNED,
-	PMBUS_RANGE_LINEAR11_UNSIGNED,
-	PMBUS_RANGE_LINEAR11_SIGNED_ARRAY,
-	PMBUS_RANGE_LINEAR11_UNSIGNED_ARRAY,
-	PMBUS_RANGE_SPARSE8_PAIRS,
-	PMBUS_RANGE_SPARSE8,
-	PMBUS_RANGE_VOUT_MODE,
-	PMBUS_RANGE_OPERATION,
-	PMBUS_RANGE_SMBALERT_MASK,
-	PMBUS_RANGE_MFR_IOUT_OC_FAST_FAULT_RESPONSE,
-	PMBUS_RANGE_BYTE_MASKS
+    PMBUS_RANGE_NONE,
+    PMBUS_RANGE_ALL,
+    PMBUS_RANGE_LINEAR11_SIGNED,
+    PMBUS_RANGE_LINEAR11_UNSIGNED,
+    PMBUS_RANGE_LINEAR11_SIGNED_ARRAY,
+    PMBUS_RANGE_LINEAR11_UNSIGNED_ARRAY,
+    PMBUS_RANGE_SPARSE8_PAIRS,
+    PMBUS_RANGE_SPARSE8,
+    PMBUS_RANGE_VOUT_MODE,
+    PMBUS_RANGE_OPERATION,
+    PMBUS_RANGE_SMBALERT_MASK,
+    PMBUS_RANGE_MFR_IOUT_OC_FAST_FAULT_RESPONSE,
+PMBUS_RANGE_BYTE_MASKS
 };
 
 enum PMBUS_PROTOCOL_ERROR_TYPES
 {
-	PMBUS_PROTOCOL_ERROR_NONE,
-	PMBUS_PROTOCOL_ERROR_CORRUPTED_DATA,
-	PMBUS_PROTOCOL_ERROR_RX_TOO_FEW_BITS,
-	PMBUS_PROTOCOL_ERROR_TX_TOO_FEW_BITS,
-	PMBUS_PROTOCOL_ERROR_RX_TOO_FEW_BYTES,
-	PMBUS_PROTOCOL_ERROR_RX_TOO_MANY_BYTES,
-	PMBUS_PROTOCOL_ERROR_TX_TOO_FEW_BYTES,
-	PMBUS_PROTOCOL_ERROR_TX_TOO_MANY_BYTES,
-	PMBUS_PROTOCOL_ERROR_DEVICE_BUSY,
-	PMBUS_PROTOCOL_ERROR_SET_READ_BIT_IN_ADDRESS_BYTE,
-	PMBUS_PROTOCOL_ERROR_UNSUPPORTED_COMMAND,
-	PMBUS_PROTOCOL_ERROR_UNSUPPORTED_DATA,
-	PMBUS_PROTOCOL_ERROR_DATA_OUT_OF_RANGE,
-	PMBUS_PROTOCOL_ERROR_COMMAND_PROTECTED,
-	PMBUS_PROTOCOL_ERROR_OTHER
+    PMBUS_PROTOCOL_ERROR_NONE,
+    PMBUS_PROTOCOL_ERROR_CORRUPTED_DATA,
+    PMBUS_PROTOCOL_ERROR_RX_TOO_FEW_BITS,
+    PMBUS_PROTOCOL_ERROR_TX_TOO_FEW_BITS,
+    PMBUS_PROTOCOL_ERROR_RX_TOO_FEW_BYTES,
+    PMBUS_PROTOCOL_ERROR_RX_TOO_MANY_BYTES,
+    PMBUS_PROTOCOL_ERROR_TX_TOO_FEW_BYTES,
+    PMBUS_PROTOCOL_ERROR_TX_TOO_MANY_BYTES,
+    PMBUS_PROTOCOL_ERROR_DEVICE_BUSY,
+    PMBUS_PROTOCOL_ERROR_SET_READ_BIT_IN_ADDRESS_BYTE,
+    PMBUS_PROTOCOL_ERROR_UNSUPPORTED_COMMAND,
+    PMBUS_PROTOCOL_ERROR_UNSUPPORTED_DATA,
+    PMBUS_PROTOCOL_ERROR_DATA_OUT_OF_RANGE,
+    PMBUS_PROTOCOL_ERROR_COMMAND_PROTECTED,
+    PMBUS_PROTOCOL_ERROR_OTHER
 };
 
 enum ENUM_PMBUS_TRANSACTION_PROTOCOL
 {
-	TRANSACTION_PROTOCOL_NONE					,
-	TRANSACTION_PROTOCOL_QUICK_COMMAND      	,
-	TRANSACTION_PROTOCOL_READ      				,
-	TRANSACTION_PROTOCOL_WRITE      			,
-	TRANSACTION_PROTOCOL_PROCESS_CALL      		,
-	TRANSACTION_PROTOCOL_BLOCK_READ     		,
-	TRANSACTION_PROTOCOL_BLOCK_WRITE      		,
-	TRANSACTION_PROTOCOL_I2C_WRITE32      		,
-	TRANSACTION_PROTOCOL_I2C_READ32      		,
-	TRANSACTION_PROTOCOL_ALERT_RESPONSE_ADDRESS ,
-	TRANSACTION_PROTOCOL_ADDRESS_RESOLUTION 	,
-	TRANSACTION_PROTOCOL_GROUP      			,
-	TRANSACTION_PROTOCOL_EXTENDED_COMMAND_READ  ,
-	TRANSACTION_PROTOCOL_EXTENDED_COMMAND_WRITE ,
-	TRANSACTION_PROTOCOL_ZONE_READ      		,
-	TRANSACTION_PROTOCOL_ZONE_WRITE      		,
-	TRANSACTION_PROTOCOL_PAGE_PLUS_READ      	,
-	TRANSACTION_PROTOCOL_PAGE_PLUS_WRITE
+    TRANSACTION_PROTOCOL_NONE					,
+    TRANSACTION_PROTOCOL_QUICK_COMMAND      	,
+    TRANSACTION_PROTOCOL_READ      				,
+    TRANSACTION_PROTOCOL_WRITE      			,
+    TRANSACTION_PROTOCOL_PROCESS_CALL      		,
+    TRANSACTION_PROTOCOL_BLOCK_READ     		,
+    TRANSACTION_PROTOCOL_BLOCK_WRITE      		,
+    TRANSACTION_PROTOCOL_I2C_WRITE32      		,
+    TRANSACTION_PROTOCOL_I2C_READ32      		,
+    TRANSACTION_PROTOCOL_ALERT_RESPONSE_ADDRESS ,
+    TRANSACTION_PROTOCOL_ADDRESS_RESOLUTION 	,
+    TRANSACTION_PROTOCOL_GROUP      			,
+    TRANSACTION_PROTOCOL_EXTENDED_COMMAND_READ  ,
+    TRANSACTION_PROTOCOL_EXTENDED_COMMAND_WRITE ,
+    TRANSACTION_PROTOCOL_ZONE_READ      		,
+    TRANSACTION_PROTOCOL_ZONE_WRITE      		,
+    TRANSACTION_PROTOCOL_PAGE_PLUS_READ      	,
+    TRANSACTION_PROTOCOL_PAGE_PLUS_WRITE
 };
 
 // common struct for all commands:
@@ -295,52 +297,52 @@ headerc = '''
 // When bit7 is enabled No AVS source bits 5:4 = 'b11 and no margin bits 3:2='b11 no reserved bit 0 = 'b1
 const uint32_t PMBUS_RANGE_OPERATION_ARRAY[8] =
 {
-		0x55555555,
-		0x55555555,
-		0x55555555,
-		0x55555555,
-		0x05555555,
-		0x00000555,
-		0x05555555,
-		0x00000555
+    0x55555555,
+    0x55555555,
+    0x55555555,
+    0x55555555,
+    0x05555555,
+    0x00000555,
+    0x05555555,
+    0x00000555
 };
 
 const uint32_t PMBUS_RANGE_SMBALERT_MASK_ARRAY[8] =
 {
-		0x00000002,	// bit 1 (in block reads)
-		0x00000000,
-		0x00000000,
-		0xff000000,	// bits 120-127
-		0x00000003,	// bits 128-129
-		0x00000000,
-		0x00000000,
-		0x00000000
+    0x00000002,	// bit 1 (in block reads)
+    0x00000000,
+    0x00000000,
+    0xff000000,	// bits 120-127
+    0x00000003,	// bits 128-129
+    0x00000000,
+    0x00000000,
+    0x00000000
 };
 
 const uint32_t PMBUS_RANGE_MFR_IOUT_OC_FAST_FAULT_RESPONSE_ARRAY[8] =
 {
-	// Generated by parse_bins_for_range.py utility with line= wildcard bins response_current_limit = {8'b00??????}; wildcard bins response_shutdown_retry = {8'b11??????};
-	0xffffffff,
-	0xffffffff,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0x00000000,
-	0xffffffff,
-	0xffffffff
+    // Generated by parse_bins_for_range.py utility with line= wildcard bins response_current_limit = {8'b00??????}; wildcard bins response_shutdown_retry = {8'b11??????};
+    0xffffffff,
+    0xffffffff,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0xffffffff,
+    0xffffffff
 };
 
 const uint32_t PMBUS_RANGE_UNSIGNED_LINEAR11_ARRAY[8] =
 {
-	// Generated by create_c_support_array.py utility with mask 0xfb
-	0x0f0f0f0f,
-	0x0f0f0f0f,
-	0x0f0f0f0f,
-	0x0f0f0f0f,
-	0x0f0f0f0f,
-	0x0f0f0f0f,
-	0x0f0f0f0f,
-	0x0f0f0f0f
+    // Generated by create_c_support_array.py utility with mask 0xfb
+    0x0f0f0f0f,
+    0x0f0f0f0f,
+    0x0f0f0f0f,
+    0x0f0f0f0f,
+    0x0f0f0f0f,
+    0x0f0f0f0f,
+    0x0f0f0f0f,
+    0x0f0f0f0f
 };
 
 // this is an array of pointers to the pmbus structs it gets initialized in the init routine:
@@ -417,25 +419,25 @@ pmbus_init_header = '''
 void pmbus_autogen_init(void)
 {
         // initialize the PMBUS_CMD_SUPPORT_ARRAY_LOOP arrays:
-	for(uint32_t i=0; i<8; i++)
-	{
-		PMBUS_CMD_SUPPORT_ARRAY_LOOP[i] = 0;  // init the array to 0
-		//PMBUS_CMD_SUPPORT_ARRAY_LOOP1[i] = 0;  // init the array to 0
-	}
+    for(uint32_t i=0; i<8; i++)
+    {
+        PMBUS_CMD_SUPPORT_ARRAY_LOOP[i] = 0;  // init the array to 0
+        //PMBUS_CMD_SUPPORT_ARRAY_LOOP1[i] = 0;  // init the array to 0
+    }
 
-	// initialize the array of pointers to the pmbus command structs:
-	for(uint32_t i=0; i<256; i++)
-	{
-		PMBUS_CMD_ARRAY_LOOP[i] = &PMBUS_CMD_UNSUPPORTED;  // populate table with unsupported to start
-		//PMBUS_CMD_ARRAY_LOOP1[i] = &PMBUS_CMD_UNSUPPORTED;  // populate table with unsupported to start
-	}
-
+    // initialize the array of pointers to the pmbus command structs:
+    for(uint32_t i=0; i<256; i++)
+    {
+        PMBUS_CMD_ARRAY_LOOP[i] = &PMBUS_CMD_UNSUPPORTED;  // populate table with unsupported to start
+        //PMBUS_CMD_ARRAY_LOOP1[i] = &PMBUS_CMD_UNSUPPORTED;  // populate table with unsupported to start
+    }
+    
         // UNSUPPORTED COMMAND:
         PMBUS_CMD_UNSUPPORTED.CMD_CONFIG = 0x000100ff;   // supported = 0, protected = 0, range_type = none, num_bytes= 1, wr and rd proto = TRANSACTION_PROTOCOL_NONE, cmdcode=0xff
-	PMBUS_CMD_UNSUPPORTED.RANGE = &PMBUS_CMD_UNSUPPORTED_RANGE[0];
-	PMBUS_CMD_UNSUPPORTED.DATA0 = &PMBUS_CMD_UNSUPPORTED_DATA[0];  // set the pointer to the data array
-	PMBUS_CMD_UNSUPPORTED.DATA1 = &PMBUS_CMD_UNSUPPORTED_DATA[0];  // set the pointer to the data array
-	PMBUS_CMD_UNSUPPORTED_DATA[0] = 0xff;  // send 0xff when we have an unsupported command
+    PMBUS_CMD_UNSUPPORTED.RANGE = &PMBUS_CMD_UNSUPPORTED_RANGE[0];
+    PMBUS_CMD_UNSUPPORTED.DATA0 = &PMBUS_CMD_UNSUPPORTED_DATA[0];  // set the pointer to the data array
+    PMBUS_CMD_UNSUPPORTED.DATA1 = &PMBUS_CMD_UNSUPPORTED_DATA[0];  // set the pointer to the data array
+    PMBUS_CMD_UNSUPPORTED_DATA[0] = 0xff;  // send 0xff when we have an unsupported command
 
 '''
 
@@ -530,58 +532,58 @@ header = header % (include_file, year, script_name, source_name, today_date)
 headerc = headerc % (include_file, year, script_name, source_name, today_date)
 mfr_header = mfr_header % (mfr_include_file, year, script_name, source_name, today_date)
 mfr_headerc = mfr_headerc % (mfr_include_file, year, script_name, source_name, today_date)
-#print header
+# print header
 
 # now go through our arrays and modify the text to c friendly text
 i = 0
 for cmd in command:
     # write_tx:
-    if ((write_tx[i] == "Write Byte") or  (write_tx[i] == "Write Word")):
+    if (write_tx[i] == "Write Byte") or (write_tx[i] == "Write Word"):
         write_tx[i] = "TRANSACTION_PROTOCOL_WRITE"
         write_tx_int[i] = 3
-    elif (write_tx[i] == "Send Byte"):
+    elif write_tx[i] == "Send Byte":
         write_tx[i] = "TRANSACTION_PROTOCOL_WRITE"
         write_tx_int[i] = 3
-    elif (write_tx[i] == "Block Write"):
+    elif write_tx[i] == "Block Write":
         write_tx[i] = "TRANSACTION_PROTOCOL_BLOCK_WRITE"
         write_tx_int[i] = 6
-    else :
+    else:
         write_tx[i] = "TRANSACTION_PROTOCOL_NONE"
         write_tx_int[i] = 0
 
     # read_tx
-    if ((read_tx[i] == "Read Byte") or  (read_tx[i] == "Read Word")):
+    if (read_tx[i] == "Read Byte") or (read_tx[i] == "Read Word"):
         read_tx[i] = "TRANSACTION_PROTOCOL_READ"
         read_tx_int[i] = 2
-    elif (read_tx[i] == "Process Call"):
+    elif read_tx[i] == "Process Call":
         read_tx[i] = "TRANSACTION_PROTOCOL_PROCESS_CALL"
         read_tx_int[i] = 4
-    elif ((read_tx[i] == "Block Read") or (read_tx[i] == "Block Wr/Block Rd Proc. Call")):
+    elif (read_tx[i] == "Block Read") or (read_tx[i] == "Block Wr/Block Rd Proc. Call"):
         read_tx[i] = "TRANSACTION_PROTOCOL_BLOCK_READ"
         read_tx_int[i] = 5
-    else :
+    else:
         read_tx[i] = "TRANSACTION_PROTOCOL_NONE"
         read_tx_int[i] = 0
 
     # loop0_supported
-    if (loop0_supported[i] == "y"):
+    if loop0_supported[i] == "y":
         loop0_supported[i] = "1"
-    else :
+    else:
         loop0_supported[i] = "0"
         
     # mfr_specific commmand (otp versus rom storage)
-    if (mfr_string[i] == "y"):
+    if mfr_string[i] == "y":
         mfr_string[i] = "1"
-    else :
+    else:
         mfr_string[i] = "0"
 
     # otp store
-    if ((loop0_supported[i] is "1") and not((otp_store[i] is None) or (int(otp_store[i]) is 0))):
+    if (loop0_supported[i] == "1") and not((otp_store[i] is None) or (int(otp_store[i]) == 0)):
         otp_store[i] = "1"
-    else :
+    else:
         otp_store[i] = "0"
 
-    if (num_bytes[i] =="Variable"):
+    if num_bytes[i] == "Variable":
         num_bytes[i] = 1
     i += 1  
 
@@ -591,395 +593,394 @@ foutc = open(source_file, 'w')
 mfr_fout = open(mfr_include_file, 'w')
 mfr_foutc = open(mfr_source_file, 'w')
 try:
-	fout.write(header)
-	fout.write('\n\n')
-        foutc.write(headerc)
-	foutc.write('\n\n')
-        mfr_fout.write(mfr_header)
-	mfr_fout.write('\n\n')
-        mfr_foutc.write(mfr_headerc)
-	mfr_foutc.write('\n\n')
-	i = 0
-        print "________________________________"
-	for cmd in command:
-            #print cmd
-            if (loop0_supported[i] == '1'):
-                # figure out the range length
+    fout.write(header)
+    fout.write('\n\n')
+    foutc.write(headerc)
+    foutc.write('\n\n')
+    mfr_fout.write(mfr_header)
+    mfr_fout.write('\n\n')
+    mfr_foutc.write(mfr_headerc)
+    mfr_foutc.write('\n\n')
+    i = 0
+    print("________________________________")
+    for cmd in command:
+        # print cmd
+        if loop0_supported[i] == '1':
+            # figure out the range length
+            range_length = "0"
+            range_res_temp = str(range_res[i])
+
+            if range_res_temp is None:
                 range_length = "0"
-                range_res_temp = str(range_res[i])
-                
-                if (range_res_temp is None):
-                    range_length = "0"
-                # special command handles first
-                elif ( (command[i] == "OPERATION") or (command[i] == "SMBALERT_MASK") or (command[i] == "VOUT_SCALE_LOOP") or (command[i] == "MFR_IOUT_OC_FAST_FAULT_RESPONSE")):
-                    range_length = "0"
-                # linear 11 format with multiple  values separated by comma
-                elif ((len(re.split(',', range_res_temp)) > 1) and ((range_res_temp[0] == "S") or (range_res_temp[0] == "U"))):
-                    range_length = len(re.split(',', range_res_temp)) * 2
-                # grab the PMBUS_RANGE_SPARSE8 and PMBUS_RANGE_SPARSE8_PAIRS range types which are - and , separated
-                elif (((len(re.split(',|-', range_res_temp)) > 1)) and (len(re.split('.', range_res_temp)) > 1)):
-                    #print "PMBUS_RANGE_SPARSE8 and PMBUS_RANGE_SPARSE8_PAIRS range types found %s" % cmd
-                    range_length = 1+ len(re.split(',|-', range_res_temp))
-                # this should grab PMBUS_RANGE_BYTE_MASKS types which are ; separated
-                elif (((len(re.split(';', range_res_temp)) > 1))):
-                    range_res_temp_array = re.split(';', range_res_temp)
-                    # we allow single byte mask values, these show up as a byte and semicolon like this 0x1f; in spreadsheet
-                    # if we see one the split will return 2 so we substract 1 from it to get the single value
-                    if (range_res_temp_array[-1] == ''):
-                        range_length = len(range_res_temp_array) - 1
+            # special command handles first
+            elif (command[i] == "OPERATION") or (command[i] == "SMBALERT_MASK") or (command[i] == "VOUT_SCALE_LOOP") or (command[i] == "MFR_IOUT_OC_FAST_FAULT_RESPONSE"):
+                range_length = "0"
+            # linear 11 format with multiple  values separated by comma
+            elif (len(re.split(',', range_res_temp)) > 1) and ((range_res_temp[0] == "S") or (range_res_temp[0] == "U")):
+                range_length = len(re.split(',', range_res_temp)) * 2
+            # grab the PMBUS_RANGE_SPARSE8 and PMBUS_RANGE_SPARSE8_PAIRS range types which are - and , separated
+            elif (len(re.split(',|-', range_res_temp)) > 1) and (len(re.split('.', range_res_temp)) > 1):
+                # print "PMBUS_RANGE_SPARSE8 and PMBUS_RANGE_SPARSE8_PAIRS range types found %s" % cmd
+                range_length = 1 + len(re.split(',|-', range_res_temp))
+            # this should grab PMBUS_RANGE_BYTE_MASKS types which are ; separated
+            elif len(re.split(';', range_res_temp)) > 1:
+                range_res_temp_array = re.split(';', range_res_temp)
+                # we allow single byte mask values, these show up as a byte and semicolon like this 0x1f; in spreadsheet
+                # if we see one the split will return 2 so we substract 1 from it to get the single value
+                if range_res_temp_array[-1] == '':
+                    range_length = len(range_res_temp_array) - 1
+                else:
+                    range_length = len(range_res_temp_array)
+                if range_length != num_bytes[i]:
+                    print("ERROR: Found byte mask type with unequal number of masks to bytes.  range_length=%s , num_bytes=%s" % (range_length, num_bytes[i]))
+            # next we take linear11 signed format
+            elif range_res_temp[0] == "S":
+                range_length = "2"
+                range_res_temp1 = range_res_temp
+                # print range_res_temp1
+                range_value = range_res_temp1.replace("S", "")  # strip the leading S
+                # range_value = range_res_temp1.replace("U", "")  # strip the leading U
+                range_array = re.split('.', range_res_temp1)
+                # print
+                j = 0
+                for r in range_array:
+                    # print r
+                    if j == 1:
+                        # print r
+                        exponent = r
+                    j += 1
+                exponent = range_array[1]
+                # fout.write("\n#define PMBUS_CMDCODE_%s_EXPONENT (0x%s)\n" % (command[i], exponent))
+            # next we take linear11 unsigned format
+            elif range_res_temp[0] == "U":
+                range_length = "2"
+                range_value = range_res_temp.replace("S", "")  # strip the leading S
+                range_value = range_res_temp.replace("U", "")  # strip the leading U
+                range_array = re.split(',|.', range_res_temp)
+                exponent = range_array[1]
+                # fout.write("\n#define PMBUS_CMDCODE_%s_EXPONENT (%s)\n" % (command[i], (int(exponent))))
+            # finally look at the vout_mode range type
+            elif (range_res_temp == "vout_mode") or (range_res_temp == "vout_mode_signed"):
+                range_length = "2"
+            else:
+                range_length = "0"
+            # print "%s %s" % (command[i],range_length)
+            # print common_storage[i]
+            if mfr_string[i] == '0':
+                fout.write("\n#define PMBUS_CMDCODE_%s (0x%s)\n" % (command[i], opcode[i]))
+            else:
+                mfr_fout.write("\n#define PMBUS_CMDCODE_%s (0x%s)\n" % (command[i], opcode[i]))
+            if (common_storage[i] == "y") and (num_bytes[i] != 0):
+                if mfr_string[i] == '0':
+                    fout.write(pmbus_e_struct_inst_common_template % (command[i], command[i], command[i], num_bytes[i], command[i]))
+                    foutc.write(pmbus_c_struct_inst_common_template % (command[i], command[i], command[i], num_bytes[i], command[i], command[i], command[i]))
+                else:
+                    mfr_fout.write(pmbus_e_struct_inst_common_template % (command[i], command[i], command[i], num_bytes[i], command[i]))
+                    mfr_foutc.write(pmbus_c_struct_inst_common_template % (command[i], command[i], command[i], num_bytes[i], command[i], command[i], command[i]))
+            else:
+                if num_bytes[i] == 0:
+                    if mfr_string[i] == '0':
+                        fout.write(pmbus_e_struct_inst_nostore_template % (command[i], command[i]))
+                        foutc.write(pmbus_c_struct_inst_nostore_template % (command[i], command[i]))
                     else:
-                        range_length = len(range_res_temp_array)
-                    if (range_length != num_bytes[i]):
-                        print "ERROR: Found byte mask type with unequal number of masks to bytes.  range_length=%s , num_bytes=%s" % (range_length , num_bytes[i])
-                # next we take linear11 signed format
-                elif (range_res_temp[0] == "S"):
-                    range_length = "2"
-                    range_res_temp1 = range_res_temp
-                    #print range_res_temp1
-                    range_value = range_res_temp1.replace("S", "")  # strip the leading S
-                    #range_value = range_res_temp1.replace("U", "")  # strip the leading U
-                    range_array = re.split('.', range_res_temp1)
-                    #print 
-                    j = 0
-                    for r in range_array:
-                        #print r
-                        if j == 1:
-                            #print r
-                            exponent = r
-                        j+=1
-                    exponent = range_array[1]
-                    #fout.write("\n#define PMBUS_CMDCODE_%s_EXPONENT (0x%s)\n" % (command[i], exponent))
-                # next we take linear11 unsigned format
-                elif (range_res_temp[0] == "U"):
-                    range_length = "2"
-                    range_value = range_res_temp.replace("S", "")  # strip the leading S
-                    range_value = range_res_temp.replace("U", "")  # strip the leading U
-                    range_array = re.split(',|.', range_res_temp)
-                    exponent = range_array[1]
-                    #fout.write("\n#define PMBUS_CMDCODE_%s_EXPONENT (%s)\n" % (command[i], (int(exponent))))
-                # finally look at the vout_mode range type
-                elif ((range_res_temp == "vout_mode") or (range_res_temp == "vout_mode_signed")):
-                    range_length = "2"
+                        mfr_fout.write(pmbus_e_struct_inst_nostore_template % (command[i], command[i]))
+                        mfr_foutc.write(pmbus_c_struct_inst_nostore_template % (command[i], command[i]))
                 else:
-                    range_length = "0"
-                #print "%s %s" % (command[i],range_length)
-                #print common_storage[i]
-                if (mfr_string[i] == '0'):
-                    fout.write("\n#define PMBUS_CMDCODE_%s (0x%s)\n" % (command[i], opcode[i]))
-                else:
-                    mfr_fout.write("\n#define PMBUS_CMDCODE_%s (0x%s)\n" % (command[i], opcode[i]))
-                if ((common_storage[i] == "y") and (num_bytes[i] != 0)):
-                    if (mfr_string[i] == '0'):
-                        fout.write(pmbus_e_struct_inst_common_template % (command[i], command[i], command[i], num_bytes[i], command[i]))
-                        foutc.write(pmbus_c_struct_inst_common_template % (command[i], command[i], command[i], num_bytes[i], command[i], command[i], command[i]))
+                    if command[i] == "SMBALERT_MASK":  # smbalert mask needs extra storage that is not in spreadsheet:
+                        fout.write(pmbus_e_struct_inst_template % (command[i], command[i], command[i], num_bytes[i]+9, command[i], num_bytes[i]+9))
+                        foutc.write(pmbus_c_struct_inst_template % (command[i], command[i], command[i], num_bytes[i]+9, command[i], num_bytes[i]+9))
                     else:
-                        mfr_fout.write(pmbus_e_struct_inst_common_template % (command[i], command[i], command[i], num_bytes[i], command[i]))
-                        mfr_foutc.write(pmbus_c_struct_inst_common_template % (command[i], command[i], command[i], num_bytes[i], command[i], command[i], command[i]))
-                else:
-                    if (num_bytes[i] == 0):
-                        if (mfr_string[i] == '0'):
-                            fout.write(pmbus_e_struct_inst_nostore_template % (command[i], command[i] ))
-                            foutc.write(pmbus_c_struct_inst_nostore_template % (command[i], command[i] ))
+                        if mfr_string[i] == '0':
+                            fout.write(pmbus_e_struct_inst_template % (command[i], command[i], command[i], num_bytes[i], command[i], num_bytes[i]))
+                            foutc.write(pmbus_c_struct_inst_template % (command[i], command[i], command[i], num_bytes[i], command[i], num_bytes[i]))
                         else:
-                            mfr_fout.write(pmbus_e_struct_inst_nostore_template % (command[i], command[i] ))
-                            mfr_foutc.write(pmbus_c_struct_inst_nostore_template % (command[i], command[i] ))
+                            mfr_fout.write(pmbus_e_struct_inst_template % (command[i], command[i], command[i], num_bytes[i], command[i], num_bytes[i]))
+                            mfr_foutc.write(pmbus_c_struct_inst_template % (command[i], command[i], command[i], num_bytes[i], command[i], num_bytes[i]))
+            # write out the range array declaration to the c files with the proper length
+            if range_length != "0":
+                if mfr_string[i] == '0':
+                    fout.write("extern uint8_t	PMBUS_CMD_%s_RANGE[%s];  	// data array for range (common for loops)\n" % (command[i], range_length))
+                    foutc.write("uint8_t	PMBUS_CMD_%s_RANGE[%s];  	// data array for range (common for loops)\n" % (command[i], range_length))
+                else:
+                    mfr_fout.write("extern uint8_t	PMBUS_CMD_%s_RANGE[%s];  	// data array for range (common for loops)\n" % (command[i], range_length))
+                    mfr_foutc.write("uint8_t	PMBUS_CMD_%s_RANGE[%s];  	// data array for range (common for loops)\n" % (command[i], range_length))
+        i += 1
+    foutc.write(pmbus_init_header)
+    mfr_foutc.write(pmbus_mfr_init_header)
+    i = 0
+    for cmd in command:
+        if loop0_supported[i] == '1':
+            if mfr_string[i] == '0':
+                foutc.write("\n\t/* initialize command structure for %s. */\n" % command[i])
+                foutc.write("\t// %s COMMAND:\n" % command[i])
+                if has_handle[i] == 'y':
+                    foutc.write("\tptr_pmbus_callback[PMBUS_CMDCODE_%s] = PMBUS_HANDLE_%s;\n" % (command[i], command[i]))
+                else:
+                    if (has_handle[i] != 'n') and (has_handle[i] != ''):
+                        foutc.write("\tptr_pmbus_callback[PMBUS_CMDCODE_%s] = PMBUS_HANDLE_%s;\n" % (command[i], has_handle[i]))
+                foutc.write("\t//PMBUS_CMD_%s.OPCODE = PMBUS_CMDCODE_%s;\n" % (command[i], command[i]))
+                foutc.write("\t//PMBUS_CMD_%s.WRITE_PROTOCOL = (uint8_t) %s;\n" % (command[i], write_tx[i]))
+                foutc.write("\t//PMBUS_CMD_%s.READ_PROTOCOL = (uint8_t) %s;\n" % (command[i], read_tx[i]))
+                foutc.write("\t//PMBUS_CMD_%s.NUM_BYTES = %s; // data only not including slave address and command\n" % (command[i], num_bytes[i]))
+                if (write_tx[i] == "TRANSACTION_PROTOCOL_BLOCK_WRITE") or (read_tx[i] == "TRANSACTION_PROTOCOL_BLOCK_READ"):
+                    foutc.write("\t//PMBUS_CMD_%s.NUM_PROTOCOL_BYTES = %s;  // slave address command and any other non-data bytes\n" % (command[i], 3))
+                else:
+                    foutc.write("\t//PMBUS_CMD_%s.NUM_PROTOCOL_BYTES = %s;  // slave address command and any other non-data bytes\n" % (command[i], 2))  # FIXME: need a spreadsheet col for number of protocol bytes not including data
+                foutc.write("\t//PMBUS_CMD_%s.SUPPORTED = %s;\n" % (command[i], loop0_supported[i]))
+                foutc.write("\t//PMBUS_CMD_%s.PROTECTED0 = %s;\n" % (command[i], 0))
+                foutc.write("\t//PMBUS_CMD_%s.PROTECTED1 = %s;\n" % (command[i], 0))
+            else:
+                mfr_foutc.write("\n\t/* initialize command structure for %s. */\n" % command[i])
+                mfr_foutc.write("\t// %s COMMAND:\n" % command[i])
+                if has_handle[i] == 'y':
+                    mfr_foutc.write("\tptr_pmbus_callback[PMBUS_CMDCODE_%s] = PMBUS_HANDLE_%s;\n" % (command[i], command[i]))
+                else:
+                    if (has_handle[i] != 'n') and (has_handle[i] != ''):
+                        mfr_foutc.write("\tptr_pmbus_callback[PMBUS_CMDCODE_%s] = PMBUS_HANDLE_%s;\n" % (command[i], has_handle[i]))
+                mfr_foutc.write("\t//PMBUS_CMD_%s.OPCODE = PMBUS_CMDCODE_%s;\n" % (command[i], command[i]))
+                mfr_foutc.write("\t//PMBUS_CMD_%s.WRITE_PROTOCOL = (uint8_t) %s;\n" % (command[i], write_tx[i]))
+                mfr_foutc.write("\t//PMBUS_CMD_%s.READ_PROTOCOL = (uint8_t) %s;\n" % (command[i], read_tx[i]))
+                mfr_foutc.write("\t//PMBUS_CMD_%s.NUM_BYTES = %s; // data only not including slave address and command\n" % (command[i], num_bytes[i]))
+                if (write_tx[i] == "TRANSACTION_PROTOCOL_BLOCK_WRITE") or (read_tx[i] == "TRANSACTION_PROTOCOL_BLOCK_READ"):
+                    mfr_foutc.write("\t//PMBUS_CMD_%s.NUM_PROTOCOL_BYTES = %s;  // slave address command and any other non-data bytes\n" % (command[i], 3))
+                else:
+                    mfr_foutc.write("\t//PMBUS_CMD_%s.NUM_PROTOCOL_BYTES = %s;  // slave address command and any other non-data bytes\n" % (command[i], 2))  # FIXME: need a spreadsheet col for number of protocol bytes not including data
+                mfr_foutc.write("\t//PMBUS_CMD_%s.SUPPORTED = %s;\n" % (command[i], loop0_supported[i]))
+                mfr_foutc.write("\t//PMBUS_CMD_%s.PROTECTED0 = %s;\n" % (command[i], 0))
+                mfr_foutc.write("\t//PMBUS_CMD_%s.PROTECTED1 = %s;\n" % (command[i], 0))
+
+            # figure out the range type from the range / res column of spreadsheet
+            range_type_int = 1
+            range_type = "PMBUS_RANGE_ALL"
+            range_res_temp = str(range_res[i])
+            if range_res_temp == 'None':
+                range_type = "PMBUS_RANGE_ALL"
+                range_type_int = 1
+                # print command[i]
+            elif write_tx[i] == "TRANSACTION_PROTOCOL_NONE":
+                range_type = "PMBUS_RANGE_NONE"
+                range_type_int = 0
+                # print command[i]
+            elif command[i] == "OPERATION":
+                range_type = "PMBUS_RANGE_OPERATION"
+                range_type_int = 9
+            elif command[i] == "VOUT_SCALE_LOOP":
+                range_type = "PMBUS_RANGE_ALL"
+                range_type_int = 1
+            elif command[i] == "SMBALERT_MASK":
+                range_type = "PMBUS_RANGE_SMBALERT_MASK"
+                range_type_int = 10
+            elif command[i] == "MFR_IOUT_OC_FAST_FAULT_RESPONSE":
+                range_type = "PMBUS_RANGE_MFR_IOUT_OC_FAST_FAULT_RESPONSE"
+                range_type_int = 11
+            elif (len(re.split(',', range_res_temp)) > 1) and (range_res_temp[0] == "S"):
+                range_type = "PMBUS_RANGE_LINEAR11_SIGNED_ARRAY"
+                range_type_int = 4
+            elif (len(re.split(',', range_res_temp)) > 1) and (range_res_temp[0] == "U"):
+                range_type = "PMBUS_RANGE_LINEAR11_UNSIGNED_ARRAY"
+                range_type_int = 5
+            elif len(range_res_temp.split("-")) > 1 and len(range_res_temp.split(",")) > 1:
+                range_type = "PMBUS_RANGE_SPARSE8_PAIRS"
+                range_type_int = 6
+            elif len(range_res_temp.split(",")) > 1:
+                range_type = "PMBUS_RANGE_SPARSE8"
+                range_type_int = 7
+            elif (range_res_temp[0] == "s") or (range_res_temp[0] == "S"):
+                range_type = "PMBUS_RANGE_LINEAR11_SIGNED"
+                range_type_int = 2
+            elif (range_res_temp[0] == "u") or (range_res_temp[0] == "U"):
+                range_type = "PMBUS_RANGE_LINEAR11_UNSIGNED"
+                range_type_int = 3
+            elif (range_res_temp == "vout_mode") or (range_res_temp == "vout_mode_signed"):
+                range_type = "PMBUS_RANGE_VOUT_MODE"
+                range_type_int = 8
+            elif len(range_res_temp.split("-")) > 1 and len(range_res_temp.split(",")) >= 1:
+                range_type = "PMBUS_RANGE_SPARSE8_PAIRS"
+                range_type_int = 6
+            elif len(range_res_temp.split(";")) >= 1:
+                range_type = "PMBUS_RANGE_BYTE_MASKS"
+                range_type_int = 12
+                # print "PMBUS_RANGE_BYTE_MASKS range command:"
+                # print command[i]
+                # print range_res_temp
+            else:
+                range_type = "PMBUS_RANGE_NONE"
+                range_type_int = 0
+                print("unprocessed range command:")
+                print(command[i])
+                print(range_res_temp)
+
+            # now write out all the info we learned to the c file:
+            if mfr_string[i] == '0':
+                # print "cmd=%s, rangetype=%s"  % (command[i], range_type)
+                foutc.write("\t//PMBUS_CMD_%s.RANGE_TYPE = (uint8_t) %s;\n" % (command[i], range_type))
+                if (range_type != "PMBUS_RANGE_ALL") and (range_type != "PMBUS_RANGE_NONE") and (range_type != "PMBUS_RANGE_MFR_IOUT_OC_FAST_FAULT_RESPONSE") and (range_type != "PMBUS_RANGE_OPERATION") and (range_type != "PMBUS_RANGE_SMBALERT_MASK"):
+                    foutc.write("\tPMBUS_CMD_%s.RANGE = &PMBUS_CMD_%s_RANGE[0];\n" % (command[i], command[i]))
+            else:
+                mfr_foutc.write("\t//PMBUS_CMD_%s.RANGE_TYPE = (uint8_t) %s;\n" % (command[i], range_type))
+                if (range_type != "PMBUS_RANGE_ALL") and (range_type != "PMBUS_RANGE_NONE") and (range_type != "PMBUS_RANGE_MFR_IOUT_OC_FAST_FAULT_RESPONSE") and (range_type != "PMBUS_RANGE_OPERATION") and (range_type != "PMBUS_RANGE_SMBALERT_MASK"):
+                    mfr_foutc.write("\tPMBUS_CMD_%s.RANGE = &PMBUS_CMD_%s_RANGE[0];\n" % (command[i], command[i]))
+
+            # now figure out the range array based on type and set the values
+            if (range_type == "PMBUS_RANGE_SPARSE8_PAIRS") or (range_type == "PMBUS_RANGE_SPARSE8"):
+                range_array = re.split(',|-', range_res_temp)
+                j = 0
+                # first we need to store the total size of the array as the first byte
+                if mfr_string[i] == '0':
+                    foutc.write("\tPMBUS_CMD_%s_RANGE[%s] = %s;\n" % (command[i], j, len(range_array)))
+                else:
+                    mfr_foutc.write("\tPMBUS_CMD_%s_RANGE[%s] = %s;\n" % (command[i], j, len(range_array)))
+                j += 1
+                for r in range_array:
+                    # print r
+                    if mfr_string[i] == '0':
+                        foutc.write("\tPMBUS_CMD_%s_RANGE[%s] = %s;\n" % (command[i], j, r))
                     else:
-                        if(command[i] == "SMBALERT_MASK"): # smbalert mask needs extra storage that is not in spreadsheet:
-                            fout.write(pmbus_e_struct_inst_template % (command[i], command[i], command[i], num_bytes[i]+9, command[i], num_bytes[i]+9))
-                            foutc.write(pmbus_c_struct_inst_template % (command[i], command[i], command[i], num_bytes[i]+9, command[i], num_bytes[i]+9))
+                        mfr_foutc.write("\tPMBUS_CMD_%s_RANGE[%s] = %s;\n" % (command[i], j, r))
+                    j += 1
+            elif range_type == "PMBUS_RANGE_BYTE_MASKS":
+                range_array = re.split(';', range_res_temp)
+                j = 0
+                for r in range_array:
+                    # print r
+                    if r != '':
+                        if mfr_string[i] == '0':
+                            foutc.write("\tPMBUS_CMD_%s_RANGE[%s] = %s;\n" % (command[i], j, r))
                         else:
-                            if (mfr_string[i] == '0'):
-                                fout.write(pmbus_e_struct_inst_template % (command[i], command[i], command[i], num_bytes[i], command[i], num_bytes[i]))
-                                foutc.write(pmbus_c_struct_inst_template % (command[i], command[i], command[i], num_bytes[i], command[i], num_bytes[i]))
-                            else:
-                                mfr_fout.write(pmbus_e_struct_inst_template % (command[i], command[i], command[i], num_bytes[i], command[i], num_bytes[i]))
-                                mfr_foutc.write(pmbus_c_struct_inst_template % (command[i], command[i], command[i], num_bytes[i], command[i], num_bytes[i]))
-                # write out the range array declaration to the c files with the proper length
-                if (range_length != "0"):
-                    if (mfr_string[i] == '0'):
-                        fout.write("extern uint8_t	PMBUS_CMD_%s_RANGE[%s];  	// data array for range (common for loops)\n" % (command[i], range_length))
-                        foutc.write("uint8_t	PMBUS_CMD_%s_RANGE[%s];  	// data array for range (common for loops)\n" % (command[i], range_length))
+                            mfr_foutc.write("\tPMBUS_CMD_%s_RANGE[%s] = %s;\n" % (command[i], j, r))
+                    j += 1
+            elif (range_type == "PMBUS_RANGE_LINEAR11_SIGNED") or (range_type == "PMBUS_RANGE_LINEAR11_UNSIGNED") or (range_type == "PMBUS_RANGE_LINEAR11_SIGNED_ARRAY") or (range_type == "PMBUS_RANGE_LINEAR11_UNSIGNED_ARRAY"):
+                # print range_res_temp
+                range_res_temp = range_res_temp.replace("S", "")  # strip the leading S
+                range_res_temp = range_res_temp.replace("U", "")  # strip the leading U
+                range_res_temp = range_res_temp.replace("s", "")  # strip the leading S
+                range_res_temp = range_res_temp.replace("u", "")  # strip the leading U
+                # print range_res_temp
+                # range_array_temp = re.split(',|.', range_res_temp)
+                range_array = re.split(',|\.', range_res_temp)
+                # print range_array[0]
+                j = 0
+                for r in range_array:
+                    # print j
+                    # print r
+                    if mfr_string[i] == '0':
+                        foutc.write("\tPMBUS_CMD_%s_RANGE[%s] = %s;\n" % (command[i], j, str(int(r) & 0x1f)))  # store as 5bit twos complement
                     else:
-                        mfr_fout.write("extern uint8_t	PMBUS_CMD_%s_RANGE[%s];  	// data array for range (common for loops)\n" % (command[i], range_length))
-                        mfr_foutc.write("uint8_t	PMBUS_CMD_%s_RANGE[%s];  	// data array for range (common for loops)\n" % (command[i], range_length))
-            i+=1
-        foutc.write(pmbus_init_header)
-        mfr_foutc.write(pmbus_mfr_init_header)
-        i = 0
-        for cmd in command:
-            if (loop0_supported[i] == '1'):
-                   if (mfr_string[i] == '0'):
-                       foutc.write("\n\t/* initialize command structure for %s. */\n" % command[i])
-                       foutc.write("\t// %s COMMAND:\n" % command[i])
-                       if (has_handle[i] == 'y'):
-                           foutc.write("\tptr_pmbus_callback[PMBUS_CMDCODE_%s] = PMBUS_HANDLE_%s;\n" % (command[i], command[i]))
-                       else:
-                           if ((has_handle[i] != 'n') and (has_handle[i] != '')):
-                               foutc.write("\tptr_pmbus_callback[PMBUS_CMDCODE_%s] = PMBUS_HANDLE_%s;\n" % (command[i], has_handle[i]))
-                       foutc.write("\t//PMBUS_CMD_%s.OPCODE = PMBUS_CMDCODE_%s;\n" % (command[i], command[i]))
-                       foutc.write("\t//PMBUS_CMD_%s.WRITE_PROTOCOL = (uint8_t) %s;\n" % (command[i], write_tx[i]))
-                       foutc.write("\t//PMBUS_CMD_%s.READ_PROTOCOL = (uint8_t) %s;\n" % (command[i], read_tx[i]))
-                       foutc.write("\t//PMBUS_CMD_%s.NUM_BYTES = %s; // data only not including slave address and command\n" % (command[i], num_bytes[i]))
-                       if ((write_tx[i] == "TRANSACTION_PROTOCOL_BLOCK_WRITE") or (read_tx[i] == "TRANSACTION_PROTOCOL_BLOCK_READ")):
-                           foutc.write("\t//PMBUS_CMD_%s.NUM_PROTOCOL_BYTES = %s;  // slave address command and any other non-data bytes\n" % (command[i], 3))
-                       else:
-                           foutc.write("\t//PMBUS_CMD_%s.NUM_PROTOCOL_BYTES = %s;  // slave address command and any other non-data bytes\n" % (command[i], 2))  # FIXME: need a spreadsheet col for number of protocol bytes not including data
-                       foutc.write("\t//PMBUS_CMD_%s.SUPPORTED = %s;\n" % (command[i], loop0_supported[i]))
-                       foutc.write("\t//PMBUS_CMD_%s.PROTECTED0 = %s;\n" % (command[i], 0))
-                       foutc.write("\t//PMBUS_CMD_%s.PROTECTED1 = %s;\n" % (command[i], 0))
-                   else:
-                       mfr_foutc.write("\n\t/* initialize command structure for %s. */\n" % command[i])
-                       mfr_foutc.write("\t// %s COMMAND:\n" % command[i])
-                       if (has_handle[i] == 'y'):
-                           mfr_foutc.write("\tptr_pmbus_callback[PMBUS_CMDCODE_%s] = PMBUS_HANDLE_%s;\n" % (command[i], command[i]))
-                       else:
-                           if ((has_handle[i] != 'n') and (has_handle[i] != '')):
-                               mfr_foutc.write("\tptr_pmbus_callback[PMBUS_CMDCODE_%s] = PMBUS_HANDLE_%s;\n" % (command[i], has_handle[i]))
-                       mfr_foutc.write("\t//PMBUS_CMD_%s.OPCODE = PMBUS_CMDCODE_%s;\n" % (command[i], command[i]))
-                       mfr_foutc.write("\t//PMBUS_CMD_%s.WRITE_PROTOCOL = (uint8_t) %s;\n" % (command[i], write_tx[i]))
-                       mfr_foutc.write("\t//PMBUS_CMD_%s.READ_PROTOCOL = (uint8_t) %s;\n" % (command[i], read_tx[i]))
-                       mfr_foutc.write("\t//PMBUS_CMD_%s.NUM_BYTES = %s; // data only not including slave address and command\n" % (command[i], num_bytes[i]))
-                       if ((write_tx[i] == "TRANSACTION_PROTOCOL_BLOCK_WRITE") or (read_tx[i] == "TRANSACTION_PROTOCOL_BLOCK_READ")):
-                           mfr_foutc.write("\t//PMBUS_CMD_%s.NUM_PROTOCOL_BYTES = %s;  // slave address command and any other non-data bytes\n" % (command[i], 3))
-                       else:
-                           mfr_foutc.write("\t//PMBUS_CMD_%s.NUM_PROTOCOL_BYTES = %s;  // slave address command and any other non-data bytes\n" % (command[i], 2))  # FIXME: need a spreadsheet col for number of protocol bytes not including data
-                       mfr_foutc.write("\t//PMBUS_CMD_%s.SUPPORTED = %s;\n" % (command[i], loop0_supported[i]))
-                       mfr_foutc.write("\t//PMBUS_CMD_%s.PROTECTED0 = %s;\n" % (command[i], 0))
-                       mfr_foutc.write("\t//PMBUS_CMD_%s.PROTECTED1 = %s;\n" % (command[i], 0))
-                   
-                   # figure out the range type from the range / res column of spreadsheet
-                   range_type_int = 1
-                   range_type = "PMBUS_RANGE_ALL"
-                   range_res_temp = str(range_res[i])
-                   if (range_res_temp == 'None'):
-                       range_type = "PMBUS_RANGE_ALL"
-                       range_type_int = 1
-                       #print command[i]
-                   elif (write_tx[i] == "TRANSACTION_PROTOCOL_NONE"):
-                       range_type = "PMBUS_RANGE_NONE"
-                       range_type_int = 0
-                       #print command[i]
-                   elif ( command[i] == "OPERATION"):
-                       range_type = "PMBUS_RANGE_OPERATION"
-                       range_type_int = 9
-                   elif ( command[i] == "VOUT_SCALE_LOOP"):
-                       range_type = "PMBUS_RANGE_ALL"
-                       range_type_int = 1
-                   elif ( command[i] == "SMBALERT_MASK"):
-                       range_type = "PMBUS_RANGE_SMBALERT_MASK"
-                       range_type_int = 10
-                   elif ( command[i] == "MFR_IOUT_OC_FAST_FAULT_RESPONSE"):
-                       range_type = "PMBUS_RANGE_MFR_IOUT_OC_FAST_FAULT_RESPONSE"
-                       range_type_int = 11
-                   elif ((len(re.split(',', range_res_temp)) > 1) and (range_res_temp[0] == "S")):
-                       range_type = "PMBUS_RANGE_LINEAR11_SIGNED_ARRAY"
-                       range_type_int = 4
-                   elif ((len(re.split(',', range_res_temp)) > 1) and (range_res_temp[0] == "U")):
-                       range_type = "PMBUS_RANGE_LINEAR11_UNSIGNED_ARRAY"
-                       range_type_int = 5
-                   elif (len(range_res_temp.split("-")) > 1 and len(range_res_temp.split(",")) > 1):
-                       range_type = "PMBUS_RANGE_SPARSE8_PAIRS"
-                       range_type_int = 6
-                   elif (len(range_res_temp.split(",")) > 1):
-                       range_type = "PMBUS_RANGE_SPARSE8"
-                       range_type_int = 7
-                   elif ((range_res_temp[0] == "s") or (range_res_temp[0] == "S")):
-                       range_type = "PMBUS_RANGE_LINEAR11_SIGNED"
-                       range_type_int = 2
-                   elif ((range_res_temp[0] == "u") or (range_res_temp[0] == "U")):
-                       range_type = "PMBUS_RANGE_LINEAR11_UNSIGNED"
-                       range_type_int = 3
-                   elif ((range_res_temp == "vout_mode") or (range_res_temp == "vout_mode_signed")):
-                       range_type = "PMBUS_RANGE_VOUT_MODE"
-                       range_type_int = 8
-                   elif (len(range_res_temp.split("-")) > 1 and len(range_res_temp.split(",")) >= 1):
-                       range_type = "PMBUS_RANGE_SPARSE8_PAIRS"
-                       range_type_int = 6
-                   elif (len(range_res_temp.split(";")) >= 1):
-                       range_type = "PMBUS_RANGE_BYTE_MASKS"
-                       range_type_int = 12
-                       #print "PMBUS_RANGE_BYTE_MASKS range command:"
-                       #print command[i]
-                       #print range_res_temp
-                   else:
-                       range_type = "PMBUS_RANGE_NONE"
-                       range_type_int = 0
-                       print "unprocessed range command:"
-                       print command[i]
-                       print range_res_temp
+                        mfr_foutc.write("\tPMBUS_CMD_%s_RANGE[%s] = %s;\n" % (command[i], j, str(int(r) & 0x1f)))  # store as 5bit twos complement
+                    j += 1
+            # else:
+                # fout.write("\tPMBUS_CMD_%s_RANGE[%s] = %s;\n" % (command[i], 0, 0))
 
-                   # now write out all the info we learned to the c file:
-                   if (mfr_string[i] == '0'):
-                       #print "cmd=%s, rangetype=%s"  % (command[i], range_type)
-                       foutc.write("\t//PMBUS_CMD_%s.RANGE_TYPE = (uint8_t) %s;\n" % (command[i], range_type))
-                       if ((range_type != "PMBUS_RANGE_ALL") and (range_type != "PMBUS_RANGE_NONE") and (range_type != "PMBUS_RANGE_MFR_IOUT_OC_FAST_FAULT_RESPONSE") and (range_type != "PMBUS_RANGE_OPERATION") and (range_type != "PMBUS_RANGE_SMBALERT_MASK")):
-                           foutc.write("\tPMBUS_CMD_%s.RANGE = &PMBUS_CMD_%s_RANGE[0];\n" % (command[i], command[i]))
-                   else:
-                       mfr_foutc.write("\t//PMBUS_CMD_%s.RANGE_TYPE = (uint8_t) %s;\n" % (command[i], range_type))
-                       if ((range_type != "PMBUS_RANGE_ALL") and (range_type != "PMBUS_RANGE_NONE") and (range_type != "PMBUS_RANGE_MFR_IOUT_OC_FAST_FAULT_RESPONSE") and (range_type != "PMBUS_RANGE_OPERATION") and (range_type != "PMBUS_RANGE_SMBALERT_MASK")):
-                           mfr_foutc.write("\tPMBUS_CMD_%s.RANGE = &PMBUS_CMD_%s_RANGE[0];\n" % (command[i], command[i]))
+            # figure out cmd_config from all the parameters:
+            # cmd_config = (((int(num_bytes[i]))&63)<<16) | (((read_tx_int[i])&15)<<12) | (((write_tx_int[i])&15)<<8) | (int(opcode[i])&255)
+            # print opcode[i]
+            num_proto = 0
+            if (write_tx[i] == "TRANSACTION_PROTOCOL_BLOCK_WRITE") or (read_tx[i] == "TRANSACTION_PROTOCOL_BLOCK_READ"):
+                num_proto = 3
+            else:
+                num_proto = 2
+            cmd_config = (((int(otp_store[i])) & 1) << 31) | (((int(loop0_supported[i])) & 1) << 30) | ((range_type_int & 15) << 24) | ((num_proto & 3) << 22) | (((int(num_bytes[i])) & 63) << 16) | (((read_tx_int[i]) & 15) << 12) | (((write_tx_int[i]) & 15) << 8) | (int(str(opcode[i]), 16) & 255)
+            # print ("%s : 0x%08x" % (command[i],cmd_config))
+            if mfr_string[i] == '0':
+                foutc.write("\tPMBUS_CMD_%s.CMD_CONFIG = 0x%08x;\n" % (command[i], cmd_config))
+            else:
+                mfr_foutc.write("\tPMBUS_CMD_%s.CMD_CONFIG = 0x%08x;\n" % (command[i], cmd_config))
 
-                   # now figure out the range array based on type and set the values
-                   if ((range_type == "PMBUS_RANGE_SPARSE8_PAIRS") or (range_type == "PMBUS_RANGE_SPARSE8")):
-                       range_array = re.split(',|-', range_res_temp)
-                       j = 0
-                       # first we need to store the total size of the array as the first byte
-                       if (mfr_string[i] == '0'):
-                           foutc.write("\tPMBUS_CMD_%s_RANGE[%s] = %s;\n" % (command[i], j, len(range_array)))
-                       else:
-                           mfr_foutc.write("\tPMBUS_CMD_%s_RANGE[%s] = %s;\n" % (command[i], j, len(range_array)))
-                       j+=1
-                       for r in range_array:
-                           #print r
-                           if (mfr_string[i] == '0'):
-                               foutc.write("\tPMBUS_CMD_%s_RANGE[%s] = %s;\n" % (command[i], j, r))
-                           else:
-                               mfr_foutc.write("\tPMBUS_CMD_%s_RANGE[%s] = %s;\n" % (command[i], j, r))
-                           j+=1
-                   elif ((range_type == "PMBUS_RANGE_BYTE_MASKS")):
-                       range_array = re.split(';', range_res_temp)
-                       j = 0
-                       for r in range_array:
-                           #print r
-                           if (r != ''):
-                               if (mfr_string[i] == '0'):
-                                   foutc.write("\tPMBUS_CMD_%s_RANGE[%s] = %s;\n" % (command[i], j, r))
-                               else:
-                                   mfr_foutc.write("\tPMBUS_CMD_%s_RANGE[%s] = %s;\n" % (command[i], j, r))
-                           j+=1
-                   elif ((range_type == "PMBUS_RANGE_LINEAR11_SIGNED") or (range_type == "PMBUS_RANGE_LINEAR11_UNSIGNED") or (range_type == "PMBUS_RANGE_LINEAR11_SIGNED_ARRAY") or (range_type == "PMBUS_RANGE_LINEAR11_UNSIGNED_ARRAY")):
-                       #print range_res_temp
-                       range_res_temp = range_res_temp.replace("S", "")  # strip the leading S
-                       range_res_temp = range_res_temp.replace("U", "")  # strip the leading U
-                       range_res_temp = range_res_temp.replace("s", "")  # strip the leading S
-                       range_res_temp = range_res_temp.replace("u", "")  # strip the leading U
-                       #print range_res_temp
-                       #range_array_temp = re.split(',|.', range_res_temp)
-                       range_array = re.split(',|\.', range_res_temp)
-                       #print range_array[0]
-                       j = 0
-                       for r in range_array:
-                           #print j
-                           #print r
-                           if (mfr_string[i] == '0'):
-                               foutc.write("\tPMBUS_CMD_%s_RANGE[%s] = %s;\n" % (command[i], j, str(int(r)&0x1f)))  # store as 5bit twos complement
-                           else:
-                               mfr_foutc.write("\tPMBUS_CMD_%s_RANGE[%s] = %s;\n" % (command[i], j, str(int(r)&0x1f)))  # store as 5bit twos complement
-                           j+=1
-                   #else:
-                        #fout.write("\tPMBUS_CMD_%s_RANGE[%s] = %s;\n" % (command[i], 0, 0))
-                        
-                   # figure out cmd_config from all the parameters:
-                   #cmd_config = (((int(num_bytes[i]))&63)<<16) | (((read_tx_int[i])&15)<<12) | (((write_tx_int[i])&15)<<8) | (int(opcode[i])&255)
-                   #print opcode[i]
-                   num_proto = 0
-                   if ((write_tx[i] == "TRANSACTION_PROTOCOL_BLOCK_WRITE") or (read_tx[i] == "TRANSACTION_PROTOCOL_BLOCK_READ")):
-                       num_proto = 3
-                   else:
-                       num_proto = 2
-                   cmd_config = (((int(otp_store[i]))&1)<<31) | (((int(loop0_supported[i]))&1)<<30) | ((( range_type_int)&15)<<24) | (((num_proto)&3)<<22) | (((int(num_bytes[i]))&63)<<16) | (((read_tx_int[i])&15)<<12) | (((write_tx_int[i])&15)<<8) | (int(str(opcode[i]),16)&255)
-                   #print ("%s : 0x%08x" % (command[i],cmd_config))
-                   if (mfr_string[i] == '0'):
-                       foutc.write("\tPMBUS_CMD_%s.CMD_CONFIG = 0x%08x;\n" % (command[i], cmd_config))
-                   else:
-                       mfr_foutc.write("\tPMBUS_CMD_%s.CMD_CONFIG = 0x%08x;\n" % (command[i], cmd_config))
-                   
-                   if (num_bytes[i] != 0):
-                       if (common_storage[i] == 'y'):
-                           if (mfr_string[i] == '0'):
-                               foutc.write("\tPMBUS_CMD_%s.DATA0 = &PMBUS_CMD_%s_DATA_LOOP0[0];  // set the pointer to the data array\n" % (command[i], command[i]))
-                               foutc.write("\tPMBUS_CMD_%s.DATA1 = &PMBUS_CMD_%s_DATA_LOOP0[0];  // set the pointer to the data array\n" % (command[i], command[i]))
-                           else:
-                               mfr_foutc.write("\tPMBUS_CMD_%s.DATA0 = &PMBUS_CMD_%s_DATA_LOOP0[0];  // set the pointer to the data array\n" % (command[i], command[i]))
-                               mfr_foutc.write("\tPMBUS_CMD_%s.DATA1 = &PMBUS_CMD_%s_DATA_LOOP0[0];  // set the pointer to the data array\n" % (command[i], command[i]))
-                       else:
-                           if (mfr_string[i] == '0'):
-                               foutc.write("\tPMBUS_CMD_%s.DATA0 = &PMBUS_CMD_%s_DATA_LOOP0[0];  // set the pointer to the data array\n" % (command[i], command[i]))
-                               foutc.write("\tPMBUS_CMD_%s.DATA1 = &PMBUS_CMD_%s_DATA_LOOP1[0];  // set the pointer to the data array\n" % (command[i], command[i]))
-                           else:
-                               mfr_foutc.write("\tPMBUS_CMD_%s.DATA0 = &PMBUS_CMD_%s_DATA_LOOP0[0];  // set the pointer to the data array\n" % (command[i], command[i]))
-                               mfr_foutc.write("\tPMBUS_CMD_%s.DATA1 = &PMBUS_CMD_%s_DATA_LOOP1[0];  // set the pointer to the data array\n" % (command[i], command[i]))
-                       for k in range (0 , num_bytes[i]):
-                           value = 0
-                           if (resetval[i] is None):
-                               value = 0
-                           else:
-                               value = ( (int(str(resetval[i]),0)) & (255<<(k*8))) >> (k*8)
-                               #print value
-                               #print str(value)
-                               #foutc.write("\tPMBUS_CMD_%s_DATA_LOOP0[%s] = %s; // set the reset value here\n" % (command[i], k, str(value)))
-                       if (common_storage[i] == 'y'):
-                           if (mfr_string[i] == '0'):
-                               foutc.write("\tPMBUS_CMD_%s_DATA_LOOP1 = &PMBUS_CMD_%s_DATA_LOOP0[0];\n" % (command[i], command[i]))
-                           else:
-                               mfr_foutc.write("\tPMBUS_CMD_%s_DATA_LOOP1 = &PMBUS_CMD_%s_DATA_LOOP0[0];\n" % (command[i], command[i]))
-                            
-                               #else:
-                               #    foutc.write("\tPMBUS_CMD_%s_DATA_LOOP1[%s] = %s; // set the reset value here\n" % (command[i], k, str(value)))
-                                  
-                   if (mfr_string[i] == '0'):
-                       foutc.write("\t// RANGE SUPPORT for %s COMMAND:\n" % (command[i]))
-                   
-                       # FIXME: need to add more to the loop for range pairs
-                       foutc.write("\t// now populate pointers to the supported commands for each page\n")
-                       foutc.write("\tPMBUS_CMD_ARRAY_LOOP[PMBUS_CMDCODE_%s] = &PMBUS_CMD_%s;\n" % (command[i], command[i]))
-                       foutc.write("\t//PMBUS_CMD_ARRAY_LOOP1[PMBUS_CMDCODE_%s] = &PMBUS_CMD_%s;\n" % (command[i], command[i]))
-                       foutc.write("\t%s\n" % (lint_exclude))
-                       foutc.write("\tPMBUS_CMD_SUPPORT_ARRAY_LOOP[PMBUS_CMDCODE_%s/32] |= (uint32_t) ((uint32_t)1u << ((uint32_t)PMBUS_CMDCODE_%s&31u));\n" % (command[i], command[i]))
-                       foutc.write("\t//PMBUS_CMD_SUPPORT_ARRAY_LOOP1[PMBUS_CMDCODE_%s/32] |= (uint32_t) ((uint32_t)1u << ((uint32_t)PMBUS_CMDCODE_%s&31u));\n" % (command[i], command[i]))
-                   else:
-                       mfr_foutc.write("\t// RANGE SUPPORT for %s COMMAND:\n" % (command[i]))
-                   
-                       # FIXME: need to add more to the loop for range pairs
-                       mfr_foutc.write("\t// now populate pointers to the supported commands for each page\n")
-                       mfr_foutc.write("\tPMBUS_CMD_ARRAY_LOOP[PMBUS_CMDCODE_%s] = &PMBUS_CMD_%s;\n" % (command[i], command[i]))
-                       mfr_foutc.write("\t//PMBUS_CMD_ARRAY_LOOP1[PMBUS_CMDCODE_%s] = &PMBUS_CMD_%s;\n" % (command[i], command[i]))
-                       mfr_foutc.write("\t%s\n" % (lint_exclude))
-                       mfr_foutc.write("\tPMBUS_CMD_SUPPORT_ARRAY_LOOP[PMBUS_CMDCODE_%s/32] |= (uint32_t) ((uint32_t)1u << ((uint32_t)PMBUS_CMDCODE_%s&31u));\n" % (command[i], command[i]))
-                       mfr_foutc.write("\t//PMBUS_CMD_SUPPORT_ARRAY_LOOP1[PMBUS_CMDCODE_%s/32] |= (uint32_t) ((uint32_t)1u << ((uint32_t)PMBUS_CMDCODE_%s&31u));\n" % (command[i], command[i]))   
-		#except:
-                #    fout.write("//FIXME: generation issue with %s\n" % (cmd))
-                #    continue
-            i+=1
-        # restore all the commands then run through handles:
-        foutc.write('\n\t// Here we call all the command handles with OTP restore direction\n\t')
-        foutc.write('''if (ptr_mfr_specific_init != (mfr_specific_init_ptr)NULL)
-	{
-		(*ptr_mfr_specific_init)();
-	}
+            if num_bytes[i] != 0:
+                if common_storage[i] == 'y':
+                    if mfr_string[i] == '0':
+                        foutc.write("\tPMBUS_CMD_%s.DATA0 = &PMBUS_CMD_%s_DATA_LOOP0[0];  // set the pointer to the data array\n" % (command[i], command[i]))
+                        foutc.write("\tPMBUS_CMD_%s.DATA1 = &PMBUS_CMD_%s_DATA_LOOP0[0];  // set the pointer to the data array\n" % (command[i], command[i]))
+                    else:
+                        mfr_foutc.write("\tPMBUS_CMD_%s.DATA0 = &PMBUS_CMD_%s_DATA_LOOP0[0];  // set the pointer to the data array\n" % (command[i], command[i]))
+                        mfr_foutc.write("\tPMBUS_CMD_%s.DATA1 = &PMBUS_CMD_%s_DATA_LOOP0[0];  // set the pointer to the data array\n" % (command[i], command[i]))
+                else:
+                    if mfr_string[i] == '0':
+                        foutc.write("\tPMBUS_CMD_%s.DATA0 = &PMBUS_CMD_%s_DATA_LOOP0[0];  // set the pointer to the data array\n" % (command[i], command[i]))
+                        foutc.write("\tPMBUS_CMD_%s.DATA1 = &PMBUS_CMD_%s_DATA_LOOP1[0];  // set the pointer to the data array\n" % (command[i], command[i]))
+                    else:
+                        mfr_foutc.write("\tPMBUS_CMD_%s.DATA0 = &PMBUS_CMD_%s_DATA_LOOP0[0];  // set the pointer to the data array\n" % (command[i], command[i]))
+                        mfr_foutc.write("\tPMBUS_CMD_%s.DATA1 = &PMBUS_CMD_%s_DATA_LOOP1[0];  // set the pointer to the data array\n" % (command[i], command[i]))
+                for k in range(0, num_bytes[i]):
+                    value = 0
+                    if resetval[i] is None:
+                        value = 0
+                    else:
+                        value = ((int(str(resetval[i]), 0)) & (255 << (k*8))) >> (k*8)
+                        # print value
+                        # print str(value)
+                        # foutc.write("\tPMBUS_CMD_%s_DATA_LOOP0[%s] = %s; // set the reset value here\n" % (command[i], k, str(value)))
+                if common_storage[i] == 'y':
+                    if mfr_string[i] == '0':
+                        foutc.write("\tPMBUS_CMD_%s_DATA_LOOP1 = &PMBUS_CMD_%s_DATA_LOOP0[0];\n" % (command[i], command[i]))
+                    else:
+                        mfr_foutc.write("\tPMBUS_CMD_%s_DATA_LOOP1 = &PMBUS_CMD_%s_DATA_LOOP0[0];\n" % (command[i], command[i]))
 
-	PMBUS_CMD_HANDLER(PMBUS_PAGE_0, PMBUS_CMDCODE_RESTORE_DEFAULT_ALL, PMBUS_WRITE); // trigger data restore from OTP configurator
-	PMBUS_CMD_HANDLER(PMBUS_PAGE_1, PMBUS_CMDCODE_RESTORE_DEFAULT_ALL, PMBUS_WRITE); // trigger data restore from OTP configurator
-	PMBUS_CMD_HANDLER(PMBUS_PAGE_0, PMBUS_CMDCODE_RESTORE_USER_ALL, PMBUS_WRITE); // trigger data restore from OTP configurator
-	PMBUS_CMD_HANDLER(PMBUS_PAGE_1, PMBUS_CMDCODE_RESTORE_USER_ALL, PMBUS_WRITE); // trigger data restore from OTP configurator
-	//PMBUS_CMD_HANDLER(0xff, PMBUS_CMDCODE_RESTORE_USER_ALL, PMBUS_WRITE);
-	
-	//for(uint32_t cmd = 1u; cmd < 255u; cmd++)  
-	//{
-	//	PMBUS_CMD_HANDLER(PMBUS_PAGE_0, cmd, OTP_RESTORE);  // execute all the commands that need to be from OTP restore
-	//	PMBUS_CMD_HANDLER(PMBUS_PAGE_1, cmd, OTP_RESTORE);  // execute all the commands that need to be from OTP restore
-	//}
-	// do write protect and operation last in sequence:
-	//PMBUS_CMD_HANDLER(PMBUS_PAGE_0, PMBUS_CMDCODE_WRITE_PROTECT, PMBUS_WRITE);
- 	//PMBUS_CMD_HANDLER(PMBUS_PAGE_1, PMBUS_CMDCODE_WRITE_PROTECT, PMBUS_WRITE);       
-        ''')
-       
-        foutc.write('\n}')    # end of pmbus_autogen_init function
-	foutc.write('\n\n')
-        fout.write('\n\n')
-        
-        mfr_foutc.write('\n}')    # end of pmbus_mfr_autogen_init function
-	mfr_foutc.write('\n\n')
-        mfr_fout.write('\n\n')
-        
-        fout.write("void pmbus_autogen_init(void);\n")
-        fout.write("void PMBUS_CMD_HANDLER(PMBUS_PAGE_t page, uint8_t command, PMBUS_DIRECTION_e direction);\n")
+                        # else:
+                        # foutc.write("\tPMBUS_CMD_%s_DATA_LOOP1[%s] = %s; // set the reset value here\n" % (command[i], k, str(value)))
 
-        mfr_fout.write("void pmbus_mfr_autogen_init(void);\n")
-        
-	
-        # write out the handler function (only in ROM code autogen)
-        foutc.write('''
+            if mfr_string[i] == '0':
+                foutc.write("\t// RANGE SUPPORT for %s COMMAND:\n" % (command[i]))
+
+                # FIXME: need to add more to the loop for range pairs
+                foutc.write("\t// now populate pointers to the supported commands for each page\n")
+                foutc.write("\tPMBUS_CMD_ARRAY_LOOP[PMBUS_CMDCODE_%s] = &PMBUS_CMD_%s;\n" % (command[i], command[i]))
+                foutc.write("\t//PMBUS_CMD_ARRAY_LOOP1[PMBUS_CMDCODE_%s] = &PMBUS_CMD_%s;\n" % (command[i], command[i]))
+                foutc.write("\t%s\n" % lint_exclude)
+                foutc.write("\tPMBUS_CMD_SUPPORT_ARRAY_LOOP[PMBUS_CMDCODE_%s/32] |= (uint32_t) ((uint32_t)1u << ((uint32_t)PMBUS_CMDCODE_%s&31u));\n" % (command[i], command[i]))
+                foutc.write("\t//PMBUS_CMD_SUPPORT_ARRAY_LOOP1[PMBUS_CMDCODE_%s/32] |= (uint32_t) ((uint32_t)1u << ((uint32_t)PMBUS_CMDCODE_%s&31u));\n" % (command[i], command[i]))
+            else:
+                mfr_foutc.write("\t// RANGE SUPPORT for %s COMMAND:\n" % (command[i]))
+
+                # FIXME: need to add more to the loop for range pairs
+                mfr_foutc.write("\t// now populate pointers to the supported commands for each page\n")
+                mfr_foutc.write("\tPMBUS_CMD_ARRAY_LOOP[PMBUS_CMDCODE_%s] = &PMBUS_CMD_%s;\n" % (command[i], command[i]))
+                mfr_foutc.write("\t//PMBUS_CMD_ARRAY_LOOP1[PMBUS_CMDCODE_%s] = &PMBUS_CMD_%s;\n" % (command[i], command[i]))
+                mfr_foutc.write("\t%s\n" % lint_exclude)
+                mfr_foutc.write("\tPMBUS_CMD_SUPPORT_ARRAY_LOOP[PMBUS_CMDCODE_%s/32] |= (uint32_t) ((uint32_t)1u << ((uint32_t)PMBUS_CMDCODE_%s&31u));\n" % (command[i], command[i]))
+                mfr_foutc.write("\t//PMBUS_CMD_SUPPORT_ARRAY_LOOP1[PMBUS_CMDCODE_%s/32] |= (uint32_t) ((uint32_t)1u << ((uint32_t)PMBUS_CMDCODE_%s&31u));\n" % (command[i], command[i]))
+    # except:
+            #    fout.write("//FIXME: generation issue with %s\n" % (cmd))
+            #    continue
+        i += 1
+    # restore all the commands then run through handles:
+    foutc.write('\n\t// Here we call all the command handles with OTP restore direction\n\t')
+    foutc.write('''if (ptr_mfr_specific_init != (mfr_specific_init_ptr)NULL)
+{
+    (*ptr_mfr_specific_init)();
+}
+
+PMBUS_CMD_HANDLER(PMBUS_PAGE_0, PMBUS_CMDCODE_RESTORE_DEFAULT_ALL, PMBUS_WRITE); // trigger data restore from OTP configurator
+PMBUS_CMD_HANDLER(PMBUS_PAGE_1, PMBUS_CMDCODE_RESTORE_DEFAULT_ALL, PMBUS_WRITE); // trigger data restore from OTP configurator
+PMBUS_CMD_HANDLER(PMBUS_PAGE_0, PMBUS_CMDCODE_RESTORE_USER_ALL, PMBUS_WRITE); // trigger data restore from OTP configurator
+PMBUS_CMD_HANDLER(PMBUS_PAGE_1, PMBUS_CMDCODE_RESTORE_USER_ALL, PMBUS_WRITE); // trigger data restore from OTP configurator
+//PMBUS_CMD_HANDLER(0xff, PMBUS_CMDCODE_RESTORE_USER_ALL, PMBUS_WRITE);
+
+//for(uint32_t cmd = 1u; cmd < 255u; cmd++)  
+//{
+//	PMBUS_CMD_HANDLER(PMBUS_PAGE_0, cmd, OTP_RESTORE);  // execute all the commands that need to be from OTP restore
+//	PMBUS_CMD_HANDLER(PMBUS_PAGE_1, cmd, OTP_RESTORE);  // execute all the commands that need to be from OTP restore
+//}
+// do write protect and operation last in sequence:
+//PMBUS_CMD_HANDLER(PMBUS_PAGE_0, PMBUS_CMDCODE_WRITE_PROTECT, PMBUS_WRITE);
+//PMBUS_CMD_HANDLER(PMBUS_PAGE_1, PMBUS_CMDCODE_WRITE_PROTECT, PMBUS_WRITE);       
+    ''')
+
+    foutc.write('\n}')    # end of pmbus_autogen_init function
+    foutc.write('\n\n')
+    fout.write('\n\n')
+
+    mfr_foutc.write('\n}')    # end of pmbus_mfr_autogen_init function
+    mfr_foutc.write('\n\n')
+    mfr_fout.write('\n\n')
+
+    fout.write("void pmbus_autogen_init(void);\n")
+    fout.write("void PMBUS_CMD_HANDLER(PMBUS_PAGE_t page, uint8_t command, PMBUS_DIRECTION_e direction);\n")
+
+    mfr_fout.write("void pmbus_mfr_autogen_init(void);\n")
+
+    # write out the handler function (only in ROM code autogen)
+    foutc.write('''
 /*
 * Function to handle all pmbus commands.  Decodes proper callback/handle function based on command number
 * @param page Loop to operate on.  Only supports 0 or 1.  Broadcast MUST be handled upstream.
@@ -988,48 +989,48 @@ try:
 */
 void PMBUS_CMD_HANDLER(PMBUS_PAGE_t page, uint8_t command, PMBUS_DIRECTION_e direction)
 {
-	// so we divide out the array assuming max of 16 controls and expect only 7 states to exist but could expand.
-	// we take state and <<4 to do the state*16 controls.  Then we add control as an offset for the index of array.
-	pmbus_callback ptr_pmbus_cb = ptr_pmbus_callback[(uint32_t)(command)];
+    // so we divide out the array assuming max of 16 controls and expect only 7 states to exist but could expand.
+    // we take state and <<4 to do the state*16 controls.  Then we add control as an offset for the index of array.
+    pmbus_callback ptr_pmbus_cb = ptr_pmbus_callback[(uint32_t)(command)];
+    
+    // check if pointer is null and if not null call it
+    if (ptr_pmbus_cb != (pmbus_callback)NULL)
+    {
+        (*ptr_pmbus_cb)((PMBUS_PAGE_t) page, direction);
+    }
+}''')
+    # foutc.write('\nvoid PMBUS_CMD_HANDLER(uint8_t page, uint8_t command, PMBUS_DIRECTION_e direction)\n{\n')
+    # foutc.write('\n\tswitch (command)\n\t{\n')
+    i = 0
+    fout.write('\n// external handle functions\n')
+    mfr_fout.write('\n// external handle functions\n')
 
-	// check if pointer is null and if not null call it
-	if (ptr_pmbus_cb != (pmbus_callback)NULL)
-	{
-		(*ptr_pmbus_cb)((PMBUS_PAGE_t) page, direction);
-	}
-}''');
-        #foutc.write('\nvoid PMBUS_CMD_HANDLER(uint8_t page, uint8_t command, PMBUS_DIRECTION_e direction)\n{\n')
-        #foutc.write('\n\tswitch (command)\n\t{\n')
-        i = 0
-        fout.write('\n// external handle functions\n')
-        mfr_fout.write('\n// external handle functions\n')
-        
-        for cmd in command:
-            if ((loop0_supported[i] == '1') and (has_handle[i]=='y')):
-                if (mfr_string[i] == '0'):
-                    fout.write("extern void PMBUS_HANDLE_%s(PMBUS_PAGE_t page, PMBUS_DIRECTION_e direction);\n" % cmd)
-                else:
-                    mfr_fout.write("extern void PMBUS_HANDLE_%s(PMBUS_PAGE_t page, PMBUS_DIRECTION_e direction);\n" % cmd)
-            i+=1
+    for cmd in command:
+        if (loop0_supported[i] == '1') and (has_handle[i] == 'y'):
+            if mfr_string[i] == '0':
+                fout.write("extern void PMBUS_HANDLE_%s(PMBUS_PAGE_t page, PMBUS_DIRECTION_e direction);\n" % cmd)
+            else:
+                mfr_fout.write("extern void PMBUS_HANDLE_%s(PMBUS_PAGE_t page, PMBUS_DIRECTION_e direction);\n" % cmd)
+        i += 1
 
-        # end the header file define:
-        fout.write('\n')
-        mfr_fout.write('\n')
-        
-        fout.write('#endif   //#endif /* _PMBUS_AUTOGEN_H_ */')  
-	fout.write('\n\n\n')
-        mfr_fout.write('#endif   //#endif /* _PMBUS_MFR_AUTOGEN_H_ */')  
-	mfr_fout.write('\n\n\n')
-        foutc.write('\n')
-        mfr_foutc.write('\n')
+    # end the header file define:
+    fout.write('\n')
+    mfr_fout.write('\n')
+
+    fout.write('#endif   //#endif /* _PMBUS_AUTOGEN_H_ */')
+    fout.write('\n\n\n')
+    mfr_fout.write('#endif   //#endif /* _PMBUS_MFR_AUTOGEN_H_ */')
+    mfr_fout.write('\n\n\n')
+    foutc.write('\n')
+    mfr_foutc.write('\n')
 
 finally:
-	fout.close()
-        foutc.close()
-        mfr_fout.close()
-        mfr_foutc.close()
+    fout.close()
+    foutc.close()
+    mfr_fout.close()
+    mfr_foutc.close()
 
-print 'Produced output file: %s' % (include_file)
-print 'Produced output file: %s' % (source_file)
-print 'Produced output file: %s' % (mfr_include_file)
-print 'Produced output file: %s' % (mfr_source_file)
+print('Produced output file: %s' % include_file)
+print('Produced output file: %s' % source_file)
+print('Produced output file: %s' % mfr_include_file)
+print('Produced output file: %s' % mfr_source_file)

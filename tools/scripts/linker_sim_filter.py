@@ -47,7 +47,7 @@ def print_verbose(x):
     Print out the given string in case the verbose flag is enabled.
     '''
     if verbose is True:
-        print "linker_sim_filter.py: %s" % x
+        print ("linker_sim_filter.py: %s" % x)
 
 def symFileRead(symInFiles):
     '''This function reads the input symbol files. It returns a string array with all symbol lines.'''
@@ -64,7 +64,11 @@ def symFileRead(symInFiles):
         # Example: 0x20008001 T patch_init
         for line in symFileList:
             print_verbose("Input file '%s' symbol: '%s'" % (symInFile, line))
-            m = re.search('^(0x[0-9A-Fa-f]+) [TDN] ([_0-9a-zA-Z]+)', line) #todo: replace by match
+            m = re.search('0x', line)  #arm symbols file has 0x and arm gnu doesn't
+            if m:
+                m = re.search('^(0x[0-9A-Fa-f]+) [TBDN] ([_0-9a-zA-Z]+)', line) #todo: replace by match            
+            else:
+                m = re.search('^([0-9A-Fa-f]+) [TBDN] ([_0-9a-zA-Z]+)', line) #todo: replace by match
             if m:
                 outputLines.append(line)
     return outputLines
@@ -119,7 +123,18 @@ def symFileWrite(fileName, symList):
     # Write symbol file mandatory header
     f.write("#<SYMDEFS># 'linker_sim_filter.py' generated symbol filter output file\n")
     outputLines = list(set(symList)) #Remove duplicate entries
-    f.writelines("\n".join(outputLines))
+    r = []
+    for l in outputLines:
+        m = re.search('0x', l)  #arm symbols file has 0x and arm gnu doesn't
+        if m:
+            r += [l]
+        else:
+            x = l.split()
+            if x[1] == "B" :
+                x[1] = "D"
+            r += ["0x" + x[0] + " " + x[1] + " " +x[2]]    
+    #f.writelines("\n".join(outputLines))
+    f.writelines("\n".join(r))    
     f.close()
 
 def symlFileWrite(fileName, symList):
@@ -132,7 +147,11 @@ def symlFileWrite(fileName, symList):
     r = []
     for l in outputLines:
         x = l.split()
-        r += [x[2] + " = " + x[0] +";"]
+        m = re.search('0x', l)  #arm symbols file has 0x and arm gnu doesn't
+        if m:
+            r += [x[2] + " = " + x[0] +";"]
+        else:
+            r += [x[2] + " = " + "0x" + x[0] +";"]            
     f.writelines("\n".join(r))
     f.close()
     

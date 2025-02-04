@@ -46,11 +46,11 @@ import os.path
 
 def AddRelativeLibPath(path):
     """Add Python library include path"""
-    current_dir = os.path.normpath(__file__+"\\..")
-    lib_dir = os.path.normpath(current_dir+"\\"+path)
+    current_dir = os.path.normpath(__file__+"//..")
+    lib_dir = os.path.normpath(current_dir+"//"+path)
     sys.path.insert(0, lib_dir)
 
-AddRelativeLibPath("../python/intelhex-1.5")
+#AddRelativeLibPath("../python/intelhex-2.3")
 AddRelativeLibPath("lib")
 
 import configparser 
@@ -131,7 +131,7 @@ def hex_file_write(a, offset, ofile):
                 ih[i + size] = a[i]
             ih.tofile(ofile, format='hex')
 
-    except (IOError, intelhex.IntelHexError), e:
+    except (IOError, intelhex.IntelHexError) as e:
         sys.stderr.write("Error reading file: %s\n" % e)
         return 1
 
@@ -148,7 +148,7 @@ def hex2bin():
     #read the intel-hex file
     try:
         ih = intelhex.IntelHex(hexfile)
-    except (IOError, intelhex.IntelHexError), e:
+    except (IOError, intelhex.IntelHexError) as e:
         sys.stderr.write("Error reading file: %s\n" % e)
         return 1
 
@@ -255,7 +255,7 @@ def hex2bin():
             address = ih_dict["start_addr"]["EIP"]
             Long2BinArray(sub_header, address)
     if address is None:
-        print "ERROR: Given HEX File does not contain \"EIP\" entry address!"
+        print ("ERROR: Given HEX File does not contain \"EIP\" entry address!")
         return 2
 
     # For partial patches with version information, the base of new UTC version time
@@ -317,7 +317,7 @@ def main():
             if o in ('-h', '--help'):
                 print(USAGE)
                 return 0
-            elif o is ('--full-patch'):
+            elif o == ('--full-patch'):
                 full_patch = True
             elif o in ('-i'):
                 hexfile=a
@@ -347,7 +347,7 @@ def main():
         if len(args) > 1:
             raise getopt.GetoptError("Too many arguments")
 
-    except getopt.GetoptError, msg:
+    except getopt.GetoptError as msg:
         txt = "ERROR: "+str(msg)  # that's required to get not-so-dumb result from 2to3 tool
         print(txt)
         print(USAGE)
@@ -355,7 +355,7 @@ def main():
 
     try:
         return hex2bin()
-    except IOError, e:
+    except IOError as e:
         import errno
         if e.errno not in (0, errno.EPIPE):
             raise

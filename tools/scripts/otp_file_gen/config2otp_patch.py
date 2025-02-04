@@ -5,6 +5,8 @@ from array import array
 from intelhex import IntelHex
 import datetime
 import os
+import re
+import sys, os
 
 ####################################################################################################
 # History
@@ -95,7 +97,7 @@ class pack_reg:
                 lremaining -= 8
 
         if y > 255:
-            print "Warning !! Byte value greater then 255: %d" % y
+            print("Warning !! Byte value greater then 255: %d" % y)
 
     def nopack(self, x):
         if isinstance(x, int):
@@ -196,9 +198,9 @@ def CalculateRegisterData(reg_adr, reg_res, reg_start, reg_width):
 
             # Here we check if the reset value fits into the range given by the width
             if x >= (1 << width):
-                print "Warning value exceeds bit width, value set to zero: \n " \
+                print("Warning value exceeds bit width, value set to zero: \n " \
                       "Adr: 0x%X, Start: %d, Width %d, Value is: %d, Value max: %d" % \
-                      (reg_adr[0], start, width, reset, (1 << width) - 1)
+                      (reg_adr[0], start, width, reset, (1 << width) - 1))
                 x = 0
             reg_val += (x << start)
         num_of_bits_per_register = start + width
@@ -224,7 +226,7 @@ def get_header(reglist, app, numi):
 
     if len(header_apps) != numi:
         # Use reset in case of an error
-        print "Error in %s: Too many apps columns is:%d should be: %d" % (app, len(header_apps), numi)
+        print("Error in %s: Too many apps columns is:%d should be: %d" % (app, len(header_apps), numi))
         header_apps_used = ['Reset']
     else:
         header_apps_used = header_apps
@@ -501,15 +503,15 @@ def GetPMBusData(app, Dataxls, DataType, RegsStructList, RegsStructArray, RegsDa
 
     # We only check f
     header_apps_used = get_header(reglist, app, numi)
-    RegisterColumns = {'opcode': 'Opcode', 'command': 'Command', 'mfr': 'MFR', 'supported': 'Loop 0\r\nSupport',
-                       'nbits': 'Loop 0 OTP\r\nnbits',
+    RegisterColumns = {'opcode': 'Opcode', 'command': 'Command', 'mfr': 'MFR', 'supported': 'Loop 0_x000D_\nSupport',
+                       'nbits': 'Loop 0 OTP_x000D_\nnbits',
                        'reset_lp0': 'Loop 0 reset', 'reset_lp1': 'Loop 0 reset',
                        'apps_lp0': header_apps_used[0], 'apps_lp1': header_apps_used[1],
                        'cmd_num_bytes': '#B',
                        }
 
     # Iterate over all values in the dictionary
-    regsel = reglist[[v for v in RegisterColumns.values()]]
+    regsel = reglist[[v for v in list(RegisterColumns.values())]]
 
     if DataType['mfr_en'] == 0:
         # Filter only the commands which are supported, have nbits more than 0, have mfr not set
@@ -578,63 +580,63 @@ def GetPMBusData(app, Dataxls, DataType, RegsStructList, RegsStructArray, RegsDa
             try:
                 reg_res_lp0 = int(str(regdata[[RegisterColumns['reset_lp0']]].values[0][0]), 16)
             except ValueError:
-                print "Warning!!! %s loop0, No valid reset data found, set to zero CMD: 0x%x" % (DataType['type'], reg_adr)
+                print("Warning!!! %s loop0, No valid reset data found, set to zero CMD: 0x%x" % (DataType['type'], reg_adr))
                 reg_res_lp0 = 0
 
             try:
                 reg_res_lp1 = int(str(regdata[[RegisterColumns['reset_lp1']]].values[0][0]), 16)
             except ValueError:
-                print "Warning!!! %s loop1, No valid reset data found, set to zero CMD: 0x%x" % (DataType['type'], reg_adr)
+                print("Warning!!! %s loop1, No valid reset data found, set to zero CMD: 0x%x" % (DataType['type'], reg_adr))
                 reg_res_lp1 = 0
 
             try:
                 reg_apps_lp0 = int(str(regdata[[RegisterColumns['apps_lp0']]].values[0][0]), 16)
             except ValueError:
-                print "Warning!!! %s loop0, No valid reset data found, set to zero CMD: 0x%x" % (DataType['type'], reg_adr)
+                print("Warning!!! %s loop0, No valid reset data found, set to zero CMD: 0x%x" % (DataType['type'], reg_adr))
                 reg_apps_lp0 = 0
 
             try:
                 reg_apps_lp1 = int(str(regdata[[RegisterColumns['apps_lp1']]].values[0][0]), 16)
             except ValueError:
-                print "Warning!!! %s loop1, No valid reset data found, set to zero CMD: 0x%x" % (DataType['type'], reg_adr)
+                print("Warning!!! %s loop1, No valid reset data found, set to zero CMD: 0x%x" % (DataType['type'], reg_adr))
                 reg_apps_lp1 = 0
 
             try:
                 reg_bits = int(regdata[[RegisterColumns['nbits']]].values[0][0])
             except ValueError:
-                print "Error!!! %s, No valid bits entry found CMD: 0x%x" % (DataType['type'], reg_adr)
+                print("Error!!! %s, No valid bits entry found CMD: 0x%x" % (DataType['type'], reg_adr))
                 excel_error = 1
 
             try:
                 reg_en = int(regdata[[RegisterColumns['supported']]].values[0][0] == 'y')
             except ValueError:
-                print "Error!!! %s, No valid supporte field found CMD: 0x%x" % (DataType['type'], reg_adr)
+                print("Error!!! %s, No valid supporte field found CMD: 0x%x" % (DataType['type'], reg_adr))
                 excel_error = 1
 
             try:
                 reg_cmd_num_bytes = int(regdata[[RegisterColumns['cmd_num_bytes']]].values[0][0])
             except ValueError:
-                print "Error!!! %s, No valid num bytes entry found CMD: 0x%x" % (DataType['type'], reg_adr)
+                print("Error!!! %s, No valid num bytes entry found CMD: 0x%x" % (DataType['type'], reg_adr))
                 excel_error = 1
 
             if reg_res_lp0 > (1 << reg_bits):
-                print "Error!!! %s loop 0 Bitlength mismatch CMD: 0x%x Numbits: %d, Data: 0x%x" % (
-                DataType['type'], reg_adr, reg_bits, reg_res_lp0)
+                print("Error!!! %s loop 0 Bitlength mismatch CMD: 0x%x Numbits: %d, Data: 0x%x" % (
+                DataType['type'], reg_adr, reg_bits, reg_res_lp0))
                 excel_error = 1
 
             if reg_res_lp1 > (1 << reg_bits):
-                print "Error!!! %s loop 1 Bitlength mismatch CMD: 0x%x Numbits: %d, Data: 0x%x" % (
-                DataType['type'], reg_adr, reg_bits, reg_res_lp1)
+                print("Error!!! %s loop 1 Bitlength mismatch CMD: 0x%x Numbits: %d, Data: 0x%x" % (
+                DataType['type'], reg_adr, reg_bits, reg_res_lp1))
                 excel_error = 1
 
             if reg_apps_lp0 > (1 << reg_bits):
-                print "Error!!! %s loop 0 Bitlength mismatch CMD: 0x%x Numbits: %d, Data: 0x%x" % (
-                DataType['type'], reg_adr, reg_bits, reg_res_lp0)
+                print("Error!!! %s loop 0 Bitlength mismatch CMD: 0x%x Numbits: %d, Data: 0x%x" % (
+                DataType['type'], reg_adr, reg_bits, reg_res_lp0))
                 excel_error = 1
 
             if reg_apps_lp1 > (1 << reg_bits):
-                print "Error!!! %s loop 1 Bitlength mismatch CMD: 0x%x Numbits: %d, Data: 0x%x" % (
-                DataType['type'], reg_adr, reg_bits, reg_res_lp1)
+                print("Error!!! %s loop 1 Bitlength mismatch CMD: 0x%x Numbits: %d, Data: 0x%x" % (
+                DataType['type'], reg_adr, reg_bits, reg_res_lp1))
                 excel_error = 1
 
             # Only collect data if there is no error
@@ -648,14 +650,14 @@ def GetPMBusData(app, Dataxls, DataType, RegsStructList, RegsStructArray, RegsDa
     #the first 32bit value in data array is total number of bytes + number of commands
     #generate size and number of commands check
     pmbus_size_num_check = reg_cmd_num_bytes_total + numr
-    RegsStructure = [[u'SIZE_NUM_CHECK', 0, 1, 32]]
+    RegsStructure = [['SIZE_NUM_CHECK', 0, 1, 32]]
     RegsStructure += RegsStructure_tmp
-    RegsData = [[u'SIZE_NUM_CHECK', 0, 32, pmbus_size_num_check, pmbus_size_num_check, pmbus_size_num_check, pmbus_size_num_check]]
+    RegsData = [['SIZE_NUM_CHECK', 0, 32, pmbus_size_num_check, pmbus_size_num_check, pmbus_size_num_check, pmbus_size_num_check]]
     RegsData_tmp += [[reg[0], reg_adr, reg_bits, reg_res_lp0, reg_res_lp1, reg_apps_lp0, reg_apps_lp1]]
     RegsData += RegsData_tmp
-    RegsStructList = [u'SIZE_NUM_CHECK', 0, 1, 32]
+    RegsStructList = ['SIZE_NUM_CHECK', 0, 1, 32]
     RegsStructList += RegsStructList_tmp
-    RegsDataList = [[u'SIZE_NUM_CHECK', [0, 32, pmbus_size_num_check, pmbus_size_num_check, pmbus_size_num_check, pmbus_size_num_check]]]
+    RegsDataList = [['SIZE_NUM_CHECK', [0, 32, pmbus_size_num_check, pmbus_size_num_check, pmbus_size_num_check, pmbus_size_num_check]]]
     RegsDataList += RegsDataList_tmp
 
     # Pack the data bit by bit into a byte list
@@ -857,7 +859,7 @@ def GetData(app, Dataxls, DataType, RegsStructArray, RegsDataArrayList, Register
     s = ''
     s += "\n\n%s Register Structure Table:\n" % DataType["type"]
     for item in RegsStructListLocal:
-        if isinstance(item, unicode) | isinstance(item, str):
+        if isinstance(item, str) | isinstance(item, str):
             s += "\n%s " % item
         else:
             s += "%s " % item
@@ -1596,7 +1598,7 @@ def ProcessApps(app, OtpMap, MFR_en, PMBUSxls):
     PMBUSDataCeedlingList = []
     LogString = ''
 
-    print "Processing of %s  ..." % app
+    print("Processing of %s  ..." % app)
     if app == 'default':
         app = 'ACF_P5_3P3V_30A'
         process_default = True
@@ -1633,9 +1635,9 @@ def ProcessApps(app, OtpMap, MFR_en, PMBUSxls):
     #if process_default and MFR_en == 0:
     if process_default:
         pmbus_configuration_data_store(PMBUSDataArrayList, PmbusConfigurationDatafile)
-        print "Generated %s  ..." % PmbusConfigurationDatafile
+        print("Generated %s  ..." % PmbusConfigurationDatafile)
         pmbus_configuration_data_store_header(PmbusConfigurationDatafile2)
-        print "Generated %s  ..." % PmbusConfigurationDatafile2
+        print("Generated %s  ..." % PmbusConfigurationDatafile2)
         
     log_store(LogString, LogFile)
 
@@ -1683,8 +1685,8 @@ def main():
     pmbus_xlsfile = sys.argv[1]
 
     
-    print "Processing files:"
-    print "    " + pmbus_xlsfile
+    print("Processing files:")
+    print("    " + pmbus_xlsfile)
 
 
     try:
@@ -1706,7 +1708,7 @@ def main():
     # Create configs with MFR
     OtpMap = True
     MFR_en = 1
-    print "Processing with MFRs"
+    print("Processing with MFRs")
     for app in apps:        
         #ProcessApps(app, OtpMap, MFR_en, RegMapxls, PMBUSxls)
         ProcessApps(app, OtpMap, MFR_en, PMBUSxls)

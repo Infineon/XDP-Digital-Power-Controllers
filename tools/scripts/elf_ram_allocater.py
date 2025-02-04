@@ -1,8 +1,8 @@
 #!/usr/bin/python
 import sys
 import os.path
-from types import InstanceType
-from sre_constants import RANGE
+#from types import InstanceType
+#from sre_constants import RANGE
 
 USAGE = """
 Generates the partial patch RAM memory range parameter for the
@@ -59,12 +59,12 @@ Arguments:
 
 def AddRelativeLibPath(path):
     """Add Python library include path"""
-    current_dir = os.path.normpath(__file__+"\\..")
-    lib_dir = os.path.normpath(current_dir+"\\"+path)
+    current_dir = os.path.normpath(__file__+"//..")
+    lib_dir = os.path.normpath(current_dir+"//"+path)
     sys.path.insert(0, lib_dir)
 
-AddRelativeLibPath("../python/pyelftools")
-AddRelativeLibPath("lib")
+#AddRelativeLibPath("../python/pyelftools")
+#AddRelativeLibPath("lib")
 
 
 import configparser 
@@ -75,7 +75,7 @@ def print_verbose(x):
     Print out the given string in case the verbose flag is enabled.
     '''
     if verbose is True:
-        print "%s: %s" % (sys.argv[0],x)
+        print ("%s: %s" % (sys.argv[0],x))
 
 class MemRegion(object):
     """memory region"""
@@ -84,8 +84,11 @@ class MemRegion(object):
         self.address = address
         self.size = size
 
-    def __cmp__(self, other):
-        return cmp(str(self.address)+str(self.size), str(other.address)+str(other.size))
+    def cmp(self, a, b):
+    	return (a > b) - (a < b) 
+
+    def __lt__(self, other):
+        return self.cmp(str(self.address)+str(self.size), str(other.address)+str(other.size))
 
     def copy(self):
         """Return an object copy"""
@@ -155,7 +158,6 @@ class MemRegions(list):
         @param end The search algorithm stops searching for a memory region at the given end address. The returned memory range MUST not exceed this end address.
         @param size Minimum size of returned memory region
         """
-
         if start+size > end:
             raise Exception("Free requested RAM section size %d exceeds specified range 0x%08X--0x%08X" % (size, start, end))
 
@@ -163,6 +165,7 @@ class MemRegions(list):
         while True:
             range_corrected = False
             for elem in sorted(self):
+            #for elem in self:
                 if elem.do_ranges_overlap(MemRegion("unused", address, size)):
                     if elem.address+elem.size < end - size:
                         address = elem.address+elem.size
@@ -291,7 +294,6 @@ class AddressHeaderFile(object):
 ################################# main #################################
 def main():
     import getopt
-
     args = None
     header_file = None
     gnu_ld_file = None
@@ -312,21 +314,19 @@ def main():
         elif o in ("-v"):
             global verbose
             verbose=True
-
     if (header_file is None) and (gnu_ld_file is None) :
         raise Exception("Output address header file not specified! See option '-a or -g'")
     if cfg_file is None:
         raise Exception("Configuration file not specified! See option '-c'")
+    
 
     if len(args) == 0:
         raise Exception("No <elf_files> given!")
-
     elf_files = args
 
     # Read in the configuration file
     config = configparser.RawConfigParser()
     config.read(cfg_file)
-
     # Read all elf files and concatenate them to one single object
     overall_mem_region = MemRegions()
     for i in elf_files:
@@ -334,7 +334,6 @@ def main():
         elf = ELFImage(i)
         overall_mem_region += elf.get_mem_range()
     overall_mem_region.dump()
-
     # Find the optional 'offset' parameter
     # Use a default value in case this parameter is not given
     # For OPUS patches, the 32 Byte describe the patch header which will be located in RAM just before the patch binary.
@@ -343,7 +342,6 @@ def main():
         offset_added = config.getint("Patch", "offset")
     except:
         pass
-
     # Find an unused region inside the merged regions
     # Extend the memory range search procedure by the additional header offset. The returned range address is also shifted by the additional offset.
     #free_region = overall_mem_region.find_unused_range(0x20032800, 0x20033FFF, 0x400 + offset_added)
@@ -368,14 +366,13 @@ def main():
         # Generate the gnu linker ile
         GnuLdFileWrite(gnu_ld_file, free_region)
 
-
 if __name__ == '__main__':
     try:
         main()
         sys.exit(0)
-    except Exception, msg:
+    except Exception as msg:
         txt = "ERROR: "+str(msg)  # that's required to get not-so-dumb result from 2to3 tool
         print(txt)
-        print "Usage:"
+        print ("Usage:")
         print(USAGE)
         sys.exit(2)

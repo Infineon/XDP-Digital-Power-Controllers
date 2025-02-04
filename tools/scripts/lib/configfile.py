@@ -1,11 +1,11 @@
 
-import ConfigParser
+import configparser
 class ConfigFile(object):
     '''Tool configuration parser'''
     def __init__(self, filename):
         self.filename = filename
         try:
-            self.config = ConfigParser.ConfigParser()
+            self.config = configparser.ConfigParser()
             self.config.read(self.filename)
         except:
             raise Exception("Could not load and parse 'ini' configuration file '%s'" % self.filename)

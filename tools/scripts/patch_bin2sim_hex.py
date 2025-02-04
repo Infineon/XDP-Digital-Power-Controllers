@@ -53,7 +53,7 @@ def raw_lsb_msb_invert(a):
 
     #generate a copy of the given array 'a'
     # avoids that the given array object is manipulated
-    a2.fromstring(a.tostring())
+    a2.frombytes(a.tobytes())
 
     b = array('B')
 
@@ -86,7 +86,7 @@ def invert_odd_raw_bytes(a):
 
     #generate a copy of the given array 'a'
     # avoids that the given array object is manipulated
-    a2.fromstring(a.tostring())
+    a2.frombytes(a.tobytes())
 
     b = array('B')
 
@@ -186,7 +186,7 @@ def bin2otp(binFileList = []):
     # This array is used ot printout the comments in each output dat file. The comment
     # should contain the origin data bytes (not inverted and no MSB/LSB swap
     a2 = array('B')
-    a2.fromstring(a.tostring())
+    a2.frombytes(a.tobytes())
 
     comment_list = []
     if data_comment == True:
@@ -233,7 +233,7 @@ def main():
         if otpFile is None:
             raise getopt.GetoptError('OTP data output file not specified')
 
-    except getopt.GetoptError, msg:
+    except getopt.GetoptError as msg:
         txt = 'ERROR: '+str(msg)  # that's required to get not-so-dumb result from 2to3 tool
         print(txt)
         print(USAGE)
@@ -241,7 +241,7 @@ def main():
 
     try:
         return bin2otp(args)
-    except IOError, e:
+    except IOError as e:
         import errno
         if e.errno not in (0, errno.EPIPE):
             raise
